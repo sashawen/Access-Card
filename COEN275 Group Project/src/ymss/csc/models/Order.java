@@ -6,6 +6,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Order {
+
+	/**
+	 * Memo, for Cafe's name, etc.
+	 */
+	private String memo;
+
 	/**
 	 * Map of FoodItem id's => Quantity.
 	 */
@@ -22,6 +28,14 @@ public class Order {
 	public Order() {
 
 	};
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 
 	/**
 	 * Adds the specified item to the order.
@@ -113,4 +127,5 @@ public class Order {
 	public void setPurchaseDate(Date purchaseDate) {
 		this.purchaseDate = purchaseDate;
 	}
+
 }

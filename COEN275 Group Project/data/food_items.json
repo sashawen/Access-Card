@@ -1,0 +1,14 @@
+{
+	"items":[
+		{
+			"name":"Pizza",
+			"description":"",
+			"calories":500,
+			"price":1.99,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		}
+	]
+}
