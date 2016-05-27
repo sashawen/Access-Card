@@ -84,8 +84,7 @@ public class CSC {
 		frame.getContentPane().add(tabbedPane);
 		
 		JPanel panel_1 = new JPanel();
-		Image img = new ImageIcon(this.getClass().getResource("/cafePic.png")).getImage();
-		panel_1.setIcon(new ImageIcon(img));
+		//Image img = new ImageIcon(this.getClass().getResource("/cafePic.png")).getImage();
 
 		tabbedPane.addTab("Cafe", null, panel_1, null);
 		

@@ -1,5 +1,8 @@
 package ymss.csc.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserAccount {
 
 	private int cardNumber;

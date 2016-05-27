@@ -1,13 +1,18 @@
 package ymss.csc.models;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FoodItem {
 	private int id;
 	
-	private static Map<Integer,FoodItem> items = new HashMap<Integer,FoodItem>();
+	private static List<FoodItem> items = new ArrayList<FoodItem>();
 	private static int nextId = 0;
+	
+	public static FoodItem getItem(int id){
+		if(items.size() > id) return items.get(id);
+		return null;
+	}
 
 	private String name;
 	private String description = "";
@@ -25,8 +30,8 @@ public class FoodItem {
 	 * Constructor
 	 */
 	public FoodItem(String name){
-		items.put(nextId, this);
-		nextId++;
+		items.add(this);
+		nextId = nextId + 1;
 		
 		this.name = name;
 	}
