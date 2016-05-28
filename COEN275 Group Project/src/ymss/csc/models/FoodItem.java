@@ -1,20 +1,21 @@
 package ymss.csc.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FoodItem {
-	private int id;
+	private int id = 0;
 	
-	private static List<FoodItem> items = new ArrayList<FoodItem>();
-	private static int nextId = 0;
+	private static Map<Integer,FoodItem> items = new HashMap<Integer,FoodItem>();
 	
 	public static FoodItem getItem(int id){
 		if(items.size() > id) return items.get(id);
 		return null;
 	}
 
-	private String name;
+	private String name = "";
 	private String description = "";
 	
 	private int calories = 0;
@@ -29,11 +30,9 @@ public class FoodItem {
 	/**
 	 * Constructor
 	 */
-	public FoodItem(String name){
-		items.add(this);
-		nextId = nextId + 1;
-		
-		this.name = name;
+	public FoodItem(int id){
+		this.id = id;
+		items.put(id, this);
 	}
 
 	/**
@@ -43,7 +42,7 @@ public class FoodItem {
 	public int getId() {
 		return id;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -64,7 +63,8 @@ public class FoodItem {
 		return calories;
 	}
 
-	public void setCalories(int calories) {
+	public void setCalories(Integer calories) {
+		if(calories == null) return;
 		this.calories = calories;
 	}
 
@@ -72,7 +72,8 @@ public class FoodItem {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
+		if(price == null) return;
 		this.price = price;
 	}
 
