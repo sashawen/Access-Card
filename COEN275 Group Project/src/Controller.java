@@ -116,6 +116,10 @@ public class Controller {
 		fundDepositFrame.setVisible(true);
 	}
 
+	/**
+	 * Main Function
+	 * @param args Command Line Arguments
+	 */
 	public static void main(String[] args) {
 		dataStore = new JSONDataStore();
 		dataStore.init();

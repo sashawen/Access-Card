@@ -43,29 +43,37 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		
+		// frame constraints
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 677, 384);
+		
+		// main frame
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		// logo label
 		JLabel logo = new JLabel("Welcome to ScoYi Online Order");
 		logo.setFont(new Font("Hiragino Kaku Gothic StdN", Font.BOLD | Font.ITALIC, 17));
 		logo.setHorizontalAlignment(SwingConstants.CENTER);
 		logo.setBounds(94, 17, 472, 54);
 		contentPane.add(logo);
 		
+		// username text field
 		tf_username = new JTextField();
 		tf_username.setBounds(466, 118, 159, 38);
 		contentPane.add(tf_username);
 		tf_username.setColumns(10);
 		
+		// username label
 		JLabel lbl_username = new JLabel("UserName:");
 		lbl_username.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_username.setBounds(385, 123, 80, 28);
 		contentPane.add(lbl_username);
 		
+		// login button
 		JButton btn_login = new JButton("Login");
 		btn_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -77,6 +85,7 @@ public class Login extends JFrame {
 		btn_login.setBounds(395, 236, 96, 29);
 		contentPane.add(btn_login);
 		
+		// cancel button
 		JButton btn_cancel = new JButton("Cancel");
 		btn_cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -87,17 +96,21 @@ public class Login extends JFrame {
 		btn_cancel.setBounds(529, 236, 96, 29);
 		contentPane.add(btn_cancel);
 		
+		// logo image
 		JLabel logoPic = new JLabel("New label");
 		logoPic.setBounds(59, 85, 272, 240);
 		contentPane.add(logoPic);
 		Image img = new ImageIcon(this.getClass().getResource("login.jpg")).getImage();		
 		logoPic.setIcon(new ImageIcon(img));
 		
+		
+		// password label
 		JLabel lbl_password = new JLabel("Password:");
 		lbl_password.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_password.setBounds(385, 175, 80, 28);
 		contentPane.add(lbl_password);
 		
+		// password field
 		tf_password = new JPasswordField();
 		tf_password.setColumns(10);
 		tf_password.setBounds(466, 170, 159, 38);
