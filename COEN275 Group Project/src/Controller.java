@@ -1,6 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -16,7 +17,7 @@ public class Controller {
 	private static CafeFrame cafeFrame;
 	private static VendingMachineFrame vendingMachineFrame;
 	private static HealthFrame healthFrame;
-	private static EditHealthFrame editHealthFrame;
+	private static IEditHealthFrame editHealthFrame;
 	private static FinanceFrame financeFrame;
 	private static FundDepositFrame fundDepositFrame;
 
@@ -94,7 +95,7 @@ public class Controller {
 		if (editHealthFrame == null)
 			editHealthFrame = new EditHealthFrame();
 
-		editHealthFrame.setVisible(true);
+		((JFrame) editHealthFrame).setVisible(true);
 	}
 
 	public static void launchFinanceFrame() {
