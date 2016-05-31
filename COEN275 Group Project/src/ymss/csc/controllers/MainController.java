@@ -1,7 +1,8 @@
+package ymss.csc.controllers;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -9,27 +10,29 @@ import ymss.csc.models.*;
 import ymss.csc.stores.*;
 import ymss.csc.views.*;
 
-public class Controller {
+public class MainController {
 
 	// Frames
 	private static LoginFrame loginFrame;
 	private static MainFrame mainFrame;
-	private static CafeFrame cafeFrame;
-	private static VendingMachineFrame vendingMachineFrame;
-	private static HealthFrame healthFrame;
-	private static IEditHealthFrame editHealthFrame;
-	private static FinanceFrame financeFrame;
-	private static FundDepositFrame fundDepositFrame;
-
+	
+	// Controllers
+	private static HealthController healthController = new HealthController();
+	private static FinanceController financeController = new FinanceController();
+	private static VendorController vendorController = new VendorController();
+	
 	// Stores
 	private static PersistentDataStore dataStore;
+	
+	// Application "State"
+	private static UserAccount currentUser;
 
 	private static String appName = "CampusSmartCafe";
 
 	public static boolean authenticate(Integer cardNumber, String password) {
-		// TODO: Implement
 		UserAccount ua = dataStore.getAccount(cardNumber);
 		if (ua != null && ua.getPassword().equals(password)) {
+			currentUser = ua;
 			return true;
 		}
 		return false;
@@ -41,80 +44,35 @@ public class Controller {
 
 		mainFrame.addOpenCafeListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				launchCafeFrame(null);
+				vendorController.launch(null);
 			}
 		});
 
 		mainFrame.addOpenVendingMachineListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				launchVendingMachineFrame(null);
+				vendorController.launch(null);
 			}
 		});
 
 		mainFrame.addOpenFinanceListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				launchFinanceFrame();
+				financeController.launch(currentUser);
 			}
 		});
 
 		mainFrame.addOpenHealthListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				launchHealthFrame();
+				healthController.launch(currentUser);
+				healthController.setHealthListener(new HealthController.HealthChangeListener(){
+					public void profileChanged(DietaryProfile profile){
+						currentUser.setDiet(profile);
+						// TODO: need to save to persistent storage
+					}
+				});
 			}
 		});
 
 		mainFrame.setVisible(true);
-	}
-
-	public static void launchCafeFrame(Cafe cafe) {
-		if (cafeFrame == null)
-			cafeFrame = new CafeFrame();
-		cafeFrame.setVisible(true);
-	}
-
-	public static void launchVendingMachineFrame(VendingMachine vm) {
-		if (vendingMachineFrame == null)
-			vendingMachineFrame = new VendingMachineFrame();
-		cafeFrame.setVisible(true);
-	}
-
-	public static void launchHealthFrame() {
-		if (healthFrame == null)
-			healthFrame = new HealthFrame();
-
-		healthFrame.addEditListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				launchEditHealthFrame();
-			}
-		});
-
-		healthFrame.setVisible(true);
-	}
-
-	public static void launchEditHealthFrame() {
-		if (editHealthFrame == null)
-			editHealthFrame = new EditHealthFrame();
-
-		((JFrame) editHealthFrame).setVisible(true);
-	}
-
-	public static void launchFinanceFrame() {
-		if (financeFrame == null)
-			financeFrame = new FinanceFrame();
-
-		financeFrame.addDepositListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				launchFundDepositFrame();
-			}
-		});
-
-		financeFrame.setVisible(true);
-	}
-
-	public static void launchFundDepositFrame() {
-		if (fundDepositFrame == null)
-			fundDepositFrame = new FundDepositFrame();
-		fundDepositFrame.setVisible(true);
 	}
 
 	/**

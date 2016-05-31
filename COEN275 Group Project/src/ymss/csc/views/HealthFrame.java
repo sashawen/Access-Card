@@ -2,10 +2,12 @@ package ymss.csc.views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,7 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class HealthFrame extends JFrame {
+import ymss.csc.models.DietaryProfile;
+
+public class HealthFrame extends JFrame implements IHealthFrame{
 
 	private static final long serialVersionUID = 724764215279243988L;
 
@@ -82,7 +86,7 @@ public class HealthFrame extends JFrame {
 		cs.gridy = 2;
 		cs.gridwidth = 1;
 		tempPanel.add(pnlPrefsList,cs);
-		initPreferencesList();
+		initPreferencesList(null);
 
 		btnEdit = new JButton("Edit Dietary Preferences");
 		cs.fill = GridBagConstraints.HORIZONTAL;
@@ -104,20 +108,22 @@ public class HealthFrame extends JFrame {
 
 	}
 	
-	private void initPreferencesList(){
+	private void initPreferencesList(List<String> prefs){
 		pnlPrefsList.removeAll();
 
 		pnlPrefsList.setLayout(new BoxLayout(pnlPrefsList,BoxLayout.Y_AXIS));
 		
-		JLabel lblLowSodium = new JLabel("Low Sodium");
-		JLabel lblLowCholesterol = new JLabel("Low Cholesterol");
-		JLabel lblGlutenFree = new JLabel("Gluten Free");
-		JLabel lblVegan = new JLabel("Vegan");
-
-		pnlPrefsList.add(lblLowSodium);
-		pnlPrefsList.add(lblLowCholesterol);
-		pnlPrefsList.add(lblGlutenFree);
-		pnlPrefsList.add(lblVegan);
+		if(prefs == null) return;
+		
+		Iterator<String> it = prefs.iterator();
+		while(it.hasNext()){
+			String str = it.next();
+			System.out.println(str);
+			JLabel lblPref = new JLabel(str);
+			pnlPrefsList.add(lblPref);
+		}
+		pnlPrefsList.repaint();
+		pnlPrefsList.revalidate();
 	}
 
 	public void addEditListener(ActionListener l) {
@@ -126,6 +132,23 @@ public class HealthFrame extends JFrame {
 
 	public void removeEditListener(ActionListener l) {
 		btnEdit.removeActionListener(l);
+	}
+	
+	private void setCaloricRange(Integer min,Integer max){
+		lblCalories.setText(min+" - "+max);
+	}
+
+	@Override
+	public void initialize(DietaryProfile diet) {
+		setCaloricRange(diet.getCalorieMinimum(),diet.getCalorieMaximum());
+		List<String> preferences = new ArrayList<String>();
+		
+		if(diet.isLowSodium()) preferences.add("Low Sodium");
+		if(diet.isLowCholesterol()) preferences.add("Low Choleseterol");
+		if(diet.isGlutenFree()) preferences.add("Gluten Free");
+		if(diet.isVegan()) preferences.add("Vegan");
+		
+		initPreferencesList(preferences);		
 	}
 
 }

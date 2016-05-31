@@ -15,6 +15,7 @@ public class UserAccount {
 	
 	public UserAccount(){
 		// nothing for now...
+		diet = new DietaryProfile();
 	}
 
 	public DietaryProfile getDiet() {
@@ -40,7 +41,7 @@ public class UserAccount {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+			
 	public double getRemainingBalance(){
 		return remainingBalance;
 	}

@@ -2,7 +2,12 @@ package ymss.csc.views;
 
 import java.awt.event.ActionListener;
 
-public interface IEditHealthFrame{
+import ymss.csc.models.DietaryProfile;
+
+public interface IEditHealthFrame {
+
+	public void initialize(DietaryProfile diet);
+
 	public Integer getCalorieMinimum();
 
 	public void setCalorieMinimum(Integer calMin);
@@ -28,5 +33,5 @@ public interface IEditHealthFrame{
 	public void setVegan(Boolean vegan);
 
 	public void addSaveListener(ActionListener l);
-	
+
 }

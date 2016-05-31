@@ -11,6 +11,10 @@ public class VendingMachine implements FoodVendor {
 
 	public VendingMachine() {
 	}
+	
+	public List<FoodItem> getMenu(){
+		return menu;
+	}
 
 	public void addItemToMenu(FoodItem item) {
 		menu.add(item);

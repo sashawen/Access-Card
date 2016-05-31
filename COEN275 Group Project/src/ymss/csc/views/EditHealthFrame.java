@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import ymss.csc.models.DietaryProfile;
+
 public class EditHealthFrame extends JFrame implements IEditHealthFrame{
 
 	private static final long serialVersionUID = 4238472435606246405L;
@@ -35,6 +37,15 @@ public class EditHealthFrame extends JFrame implements IEditHealthFrame{
 
 	private JButton btnCancel;
 	private JButton btnSave;
+	
+	public void initialize(DietaryProfile diet){
+		setCalorieMinimum(diet.getCalorieMinimum());
+		setCalorieMaximum(diet.getCalorieMaximum());
+		setLowSodium(diet.isLowSodium());
+		setLowCholesterol(diet.isLowCholesterol());
+		setGlutenFree(diet.isGlutenFree());
+		setVegan(diet.isVegan());
+	}
 	
 	private GridBagConstraints createGbc(int x, int y) {
 	      GridBagConstraints gbc = new GridBagConstraints();
