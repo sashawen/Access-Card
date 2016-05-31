@@ -10,6 +10,38 @@
 			"low_cholesterol":false,
 			"gluten_free": false,
 			"vegan": false
+		},
+		{
+			"id":1,
+			"name":"Potato Chips",
+			"description":"Salty, crunchy.  Pretty normal.",
+			"calories":500,
+			"price":1.00,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":2,
+			"name":"BBQ Potato Chips",
+			"description":"Mesquite barbeque taste that the obese love.",
+			"calories":500,
+			"price":1.00,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":3,
+			"name":"Dried Seaweed",
+			"description":"\"Taste of the Sea\", whatever that means.",
+			"calories":500,
+			"price":0.75,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": true,
+			"vegan": true
 		}
+		
 	]
 }

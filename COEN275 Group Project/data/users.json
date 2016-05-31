@@ -3,7 +3,8 @@
 		{
 			"card_number":774404,
 			"username":"scott",
-			"password":"admin"
+			"password":"admin",
+			"balance":1.50
 		}
 	]
 }

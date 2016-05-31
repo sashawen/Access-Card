@@ -2,6 +2,8 @@ package ymss.csc.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -13,23 +15,24 @@ import ymss.csc.views.*;
 public class MainController {
 
 	// Frames
-	private static LoginFrame loginFrame;
-	private static MainFrame mainFrame;
+	private LoginFrame loginFrame;
+	private MainFrame mainFrame;
 	
 	// Controllers
-	private static HealthController healthController = new HealthController();
-	private static FinanceController financeController = new FinanceController();
-	private static VendorController vendorController = new VendorController();
+	private HealthController healthController = new HealthController();
+	private FinanceController financeController = new FinanceController();
+	private VendorController vendorController = new VendorController();
 	
 	// Stores
-	private static PersistentDataStore dataStore;
+	private PersistentDataStore dataStore;
+	private VendingMachine dummyVendingMachine;
 	
 	// Application "State"
-	private static UserAccount currentUser;
+	private UserAccount currentUser;
 
 	private static String appName = "CampusSmartCafe";
 
-	public static boolean authenticate(Integer cardNumber, String password) {
+	public boolean authenticate(Integer cardNumber, String password) {
 		UserAccount ua = dataStore.getAccount(cardNumber);
 		if (ua != null && ua.getPassword().equals(password)) {
 			currentUser = ua;
@@ -38,19 +41,28 @@ public class MainController {
 		return false;
 	}
 
-	public static void launchMainFrame() {
+	public void launchMainFrame() {
 		if (mainFrame == null)
 			mainFrame = new MainFrame();
 
 		mainFrame.addOpenCafeListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vendorController.launch(null);
+				vendorController.launch(currentUser,null);
 			}
 		});
 
 		mainFrame.addOpenVendingMachineListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vendorController.launch(null);
+				vendorController.launch(currentUser,dummyVendingMachine);
+				vendorController.setOrderListener(new VendorController.OrderSubmissionListener() {
+					
+					@Override
+					public void orderSubmitted(Order order) {
+						Double newBalance = currentUser.getRemainingBalance() - order.getTotalCost();
+						currentUser.setRemainingBalance(newBalance);
+						vendorController.launch(currentUser, dummyVendingMachine); // (relaunch)
+					}
+				});
 			}
 		});
 
@@ -74,22 +86,30 @@ public class MainController {
 
 		mainFrame.setVisible(true);
 	}
-
-	/**
-	 * Main Function
-	 * @param args Command Line Arguments
-	 */
-	public static void main(String[] args) {
+	
+	private void initDummyVendingMachine(){
+		dummyVendingMachine = new VendingMachine();
+		
+		List<FoodItem> items = dataStore.getFoodItems();
+		
+		Iterator<FoodItem> it = items.iterator();
+		while(it.hasNext()){
+			dummyVendingMachine.addItemToMenu(it.next());
+		}
+	}
+	
+	
+	public MainController(){
 		dataStore = new JSONDataStore();
 		dataStore.init();
+		
+		initDummyVendingMachine();
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				// mainFrame = new MainFrame();
-				// mainFrame.setVisible(true);
-				loginFrame = new LoginFrame(appName);
+				loginFrame = new LoginFrame();
 
-				loginFrame.addLoginListener(new ActionListener() {
+				loginFrame.addAuthListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (authenticate(loginFrame.getCardNumber(), loginFrame.getPassword())) {
 							launchMainFrame();
@@ -101,15 +121,17 @@ public class MainController {
 					}
 				});
 
-				loginFrame.addCancelListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						loginFrame.dispose();
-					}
-				});
-
 				loginFrame.setVisible(true);
 
 			}
 		});
+	}
+
+	/**
+	 * Main Function
+	 * @param args Command Line Arguments
+	 */
+	public static void main(String[] args) {
+		MainController mc = new MainController();
 	}
 }

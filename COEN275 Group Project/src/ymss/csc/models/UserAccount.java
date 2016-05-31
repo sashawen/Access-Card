@@ -45,4 +45,8 @@ public class UserAccount {
 	public double getRemainingBalance(){
 		return remainingBalance;
 	}
+	
+	public void setRemainingBalance(Double funds){
+		remainingBalance = funds;
+	}
 }

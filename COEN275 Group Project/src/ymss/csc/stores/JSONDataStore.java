@@ -147,6 +147,7 @@ public class JSONDataStore implements PersistentDataStore {
 		UserAccount acct = new UserAccount();
 		acct.setCardNumber(parseInt(user,"card_number"));
 		acct.setPassword(parseString(user,"password"));
+		acct.setRemainingBalance(parseDouble(user,"balance"));
 		
 		return acct;
 	}
