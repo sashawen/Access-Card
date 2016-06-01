@@ -25,6 +25,7 @@ public class MainController {
 	
 	// Stores
 	private PersistentDataStore dataStore;
+	private Cafe dummyCafe;
 	private VendingMachine dummyVendingMachine;
 	
 	// Application "State"
@@ -47,7 +48,16 @@ public class MainController {
 
 		mainFrame.addOpenCafeListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vendorController.launch(currentUser,null);
+				vendorController.launch(currentUser,dummyCafe);
+				vendorController.setOrderListener(new VendorController.OrderSubmissionListener() {
+					
+					@Override
+					public void orderSubmitted(Order order) {
+						Double newBalance = currentUser.getRemainingBalance() - order.getTotalCost();
+						currentUser.setRemainingBalance(newBalance);
+						vendorController.launch(currentUser, dummyCafe); // (relaunch)
+					}
+				});
 			}
 		});
 
@@ -87,23 +97,26 @@ public class MainController {
 		mainFrame.setVisible(true);
 	}
 	
-	private void initDummyVendingMachine(){
-		dummyVendingMachine = new VendingMachine();
+	private void initFoodVendor(FoodVendor vendor){
+		if(vendor == null) return;
 		
 		List<FoodItem> items = dataStore.getFoodItems();
 		
 		Iterator<FoodItem> it = items.iterator();
 		while(it.hasNext()){
-			dummyVendingMachine.addItemToMenu(it.next());
+			vendor.addItemToMenu(it.next());
 		}
 	}
 	
-	
+		
 	public MainController(){
 		dataStore = new JSONDataStore();
 		dataStore.init();
 		
-		initDummyVendingMachine();
+		dummyVendingMachine = new VendingMachine();
+		dummyCafe = new Cafe("Dummy");
+		initFoodVendor(dummyVendingMachine);
+		initFoodVendor(dummyCafe);
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

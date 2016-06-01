@@ -51,4 +51,8 @@ public class Cafe implements FoodVendor {
 	public void purchase() {
 		cart = new Order(); // (reset)
 	}
+
+	public List<FoodItem> getMenu() {
+		return menu;
+	}
 }
