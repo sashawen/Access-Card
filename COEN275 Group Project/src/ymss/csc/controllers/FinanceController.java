@@ -21,6 +21,8 @@ public class FinanceController {
 		if (financeFrame == null)
 			financeFrame = new FinanceFrame();
 
+		financeFrame.setBalance(user.getRemainingBalance());
+		
 		financeFrame.addDepositListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				launchFundDepositFrame();
@@ -31,8 +33,30 @@ public class FinanceController {
 	}
 
 	public void launchFundDepositFrame() {
-		if (fundDepositFrame == null)
+		if (fundDepositFrame == null){
 			fundDepositFrame = new FundDepositFrame();
+		
+			fundDepositFrame.addDepositListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					Double amt = fundDepositFrame.getDeposit();
+					if(finListener != null){
+						finListener.fundsDeposited(amt);
+					}
+					fundDepositFrame.dispose();
+				}
+			});
+		}
+		
 		fundDepositFrame.setVisible(true);
+	}
+	
+	public interface FinanceListener{
+		public void fundsDeposited(Double d);
+	}
+	
+	private FinanceListener finListener;
+	
+	public void setFinanceListener(FinanceListener l){
+		finListener = l;
 	}
 }

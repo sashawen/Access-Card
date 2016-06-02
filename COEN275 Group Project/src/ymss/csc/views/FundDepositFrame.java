@@ -1,17 +1,100 @@
 package ymss.csc.views;
 
 import javax.swing.JFrame;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.FlowLayout;
+import javax.swing.SwingConstants;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.CardLayout;
 
 public class FundDepositFrame extends JFrame {
 private static final long serialVersionUID = 7093746272356081378L;
 	
 	static final String title = "Deposit Funds";
+	private JTextField tfDeposit;
+	private JButton btnDeposit;
 
 	public FundDepositFrame() {
 		// Window initialization
 		setTitle(title);
-		setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		
+		JPanel pnlMain = new JPanel();
+		getContentPane().add(pnlMain);
+		pnlMain.setBorder(new EmptyBorder(10, 25, 10, 25));
+		pnlMain.setLayout(new BoxLayout(pnlMain, BoxLayout.Y_AXIS));
+		
+		initForm(pnlMain);		
+		initButtons(pnlMain);
+		
+		//this.setSize(366, 306);
+		pack();
+	}
+	
+	private void initForm(JPanel parent){
+		if(parent == null) return;
+		
+		JPanel pnlForm = new JPanel();
+		pnlForm.setBorder(new EmptyBorder(10, 0, 10, 0));
+		pnlForm.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		pnlForm.setLayout(new BoxLayout(pnlForm, BoxLayout.X_AXIS));
+		
+		JLabel lblDeposit = new JLabel("Deposit Amount ($): ");
+		pnlForm.add(lblDeposit);
+		
+		tfDeposit = new JTextField();
+		pnlForm.add(tfDeposit);
+		tfDeposit.setText("");
+		tfDeposit.setColumns(10);
+		
+		parent.add(pnlForm);
+	}
+	
+	private void initButtons(JPanel parent){
+		if(parent == null) return;
+		
+		JPanel pnlButtons = new JPanel();
+		pnlButtons.setBorder(null);
+		pnlButtons.setLayout(new GridLayout(0, 2, 30, 0));
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				dispose();
+			}
+		});
+		pnlButtons.add(btnCancel);
+		
+		btnDeposit = new JButton("Deposit");
+		pnlButtons.add(btnDeposit);
+		
+		parent.add(pnlButtons);
+	}
+	
+	public Double getDeposit(){
+		String sDeposit = tfDeposit.getText().trim();
+		try{
+			return Double.parseDouble(sDeposit);
+		}catch(Exception e){
+			return 0.0;
+		}
+	}
+	
+	public void addDepositListener(ActionListener l){
+		btnDeposit.addActionListener(l);
 	}
 }

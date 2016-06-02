@@ -79,6 +79,15 @@ public class MainController {
 		mainFrame.addOpenFinanceListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				financeController.launch(currentUser);
+				financeController.setFinanceListener(new FinanceController.FinanceListener() {
+					
+					@Override
+					public void fundsDeposited(Double d) {
+						Double newBalance = currentUser.getRemainingBalance() + d;
+						currentUser.setRemainingBalance(newBalance);
+						financeController.launch(currentUser);
+					}
+				});
 			}
 		});
 
