@@ -29,9 +29,9 @@ public class VendorController {
 	}
 
 	public void launchCafeFrame(Cafe cafe) {
-		if (cafeFrame == null)
-			cafeFrame = new CafeFrame();
-		cafeFrame.initialize(cafe, user);
+		if(cafeFrame != null) cafeFrame.dispose();
+			
+		cafeFrame = new CafeFrame(user,cafe);
 
 		cafeFrame.setOrderListener(new CafeFrame.OrderListener() {
 

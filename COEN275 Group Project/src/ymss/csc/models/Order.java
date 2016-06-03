@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
-public class Order {
+public class Order extends Observable{
 
 	/**
 	 * Memo, for Cafe's name, etc.
@@ -58,6 +59,9 @@ public class Order {
 		} else {
 			quantities.put(id, quantities.get(id) + 1);
 		}
+		
+		setChanged();
+		notifyObservers();
 		return;
 	}
 	
@@ -74,6 +78,9 @@ public class Order {
 			return;
 
 		quantities.put(id, quantities.get(id) - 1);
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	public List<FoodItem> getItems(){

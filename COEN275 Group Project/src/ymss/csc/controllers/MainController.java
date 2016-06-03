@@ -17,21 +17,19 @@ public class MainController {
 	// Frames
 	private LoginFrame loginFrame;
 	private MainFrame mainFrame;
-	
+	private HealthFrame healthFrame;
+	private FinanceFrame financeFrame;
+
 	// Controllers
-	private HealthController healthController = new HealthController();
-	private FinanceController financeController = new FinanceController();
 	private VendorController vendorController = new VendorController();
-	
+
 	// Stores
 	private PersistentDataStore dataStore;
 	private Cafe dummyCafe;
 	private VendingMachine dummyVendingMachine;
-	
+
 	// Application "State"
 	private UserAccount currentUser;
-
-	private static String appName = "CampusSmartCafe";
 
 	public boolean authenticate(Integer cardNumber, String password) {
 		UserAccount ua = dataStore.getAccount(cardNumber);
@@ -48,9 +46,9 @@ public class MainController {
 
 		mainFrame.addOpenCafeListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vendorController.launch(currentUser,dummyCafe);
+				vendorController.launch(currentUser, dummyCafe);
 				vendorController.setOrderListener(new VendorController.OrderSubmissionListener() {
-					
+
 					@Override
 					public void orderSubmitted(Order order) {
 						Double newBalance = currentUser.getRemainingBalance() - order.getTotalCost();
@@ -63,9 +61,9 @@ public class MainController {
 
 		mainFrame.addOpenVendingMachineListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vendorController.launch(currentUser,dummyVendingMachine);
+				vendorController.launch(currentUser, dummyVendingMachine);
 				vendorController.setOrderListener(new VendorController.OrderSubmissionListener() {
-					
+
 					@Override
 					public void orderSubmitted(Order order) {
 						Double newBalance = currentUser.getRemainingBalance() - order.getTotalCost();
@@ -78,50 +76,41 @@ public class MainController {
 
 		mainFrame.addOpenFinanceListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				financeController.launch(currentUser);
-				financeController.setFinanceListener(new FinanceController.FinanceListener() {
-					
-					@Override
-					public void fundsDeposited(Double d) {
-						Double newBalance = currentUser.getRemainingBalance() + d;
-						currentUser.setRemainingBalance(newBalance);
-						financeController.launch(currentUser);
-					}
-				});
+				if (financeFrame == null)
+					financeFrame = new FinanceFrame(currentUser);
+
+				financeFrame.setVisible(true);
 			}
 		});
 
 		mainFrame.addOpenHealthListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				healthController.launch(currentUser);
-				healthController.setHealthListener(new HealthController.HealthChangeListener(){
-					public void profileChanged(DietaryProfile profile){
-						currentUser.setDiet(profile);
-						// TODO: need to save to persistent storage
-					}
-				});
+				if (healthFrame == null)
+					healthFrame = new HealthFrame(currentUser);
+
+				healthFrame.setVisible(true);
 			}
 		});
 
 		mainFrame.setVisible(true);
 	}
-	
-	private void initFoodVendor(FoodVendor vendor){
-		if(vendor == null) return;
-		
+
+	private void initFoodVendor(FoodVendor vendor) {
+		if (vendor == null)
+			return;
+
 		List<FoodItem> items = dataStore.getFoodItems();
-		
+
 		Iterator<FoodItem> it = items.iterator();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			vendor.addItemToMenu(it.next());
 		}
 	}
-	
-		
-	public MainController(){
+
+	public MainController() {
 		dataStore = new JSONDataStore();
 		dataStore.init();
-		
+
 		dummyVendingMachine = new VendingMachine();
 		dummyCafe = new Cafe("Dummy");
 		initFoodVendor(dummyVendingMachine);
@@ -151,7 +140,9 @@ public class MainController {
 
 	/**
 	 * Main Function
-	 * @param args Command Line Arguments
+	 * 
+	 * @param args
+	 *            Command Line Arguments
 	 */
 	public static void main(String[] args) {
 		MainController mc = new MainController();

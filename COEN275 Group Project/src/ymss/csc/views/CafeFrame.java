@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,7 +20,7 @@ import javax.swing.JPanel;
 
 import ymss.csc.models.*;
 
-public class CafeFrame extends JFrame {
+public class CafeFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = -2638211781748534596L;
 
@@ -28,7 +30,13 @@ public class CafeFrame extends JFrame {
 	private JLabel lblBalance;
 	private JPanel pnlOrder;
 
-	public CafeFrame() {
+	private UserAccount user;
+	private Cafe cafe;
+	
+	public CafeFrame(UserAccount user, Cafe cafe) {
+		this.user = user;
+		this.cafe = cafe;
+		
 		// Window initialization
 		setTitle(title);
 		setSize(800, 600);
@@ -51,6 +59,9 @@ public class CafeFrame extends JFrame {
 
 		mainPanel.add(menuPanel, BorderLayout.CENTER);
 		this.setContentPane(mainPanel);
+		
+		user.addObserver(this);
+		initialize(cafe,user);
 	}
 
 	public void initialize(Cafe cafe, UserAccount user) {
@@ -71,7 +82,7 @@ public class CafeFrame extends JFrame {
 		repaint();
 		revalidate();
 	}
-
+	
 	private void initOrderPanel(Order order) {
 		pnlOrder.removeAll();
 
@@ -217,5 +228,11 @@ public class CafeFrame extends JFrame {
 
 	public void setOrderListener(OrderListener l) {
 		orderListener = l;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		initialize(cafe,user);
 	}
 }
