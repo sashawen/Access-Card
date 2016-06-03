@@ -20,8 +20,15 @@ import javax.swing.JPanel;
 
 import ymss.csc.models.DietaryProfile;
 import ymss.csc.models.UserAccount;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Font;
+import java.awt.Component;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTextPane;
 
-public class HealthFrame extends JFrame implements Observer{
+public class HealthFrame extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 724764215279243988L;
 
@@ -33,132 +40,137 @@ public class HealthFrame extends JFrame implements Observer{
 	private JLabel lblCaloriesPrefix;
 	private JLabel lblCalories;
 	private JLabel lblPrefs;
-	
+
 	private JPanel pnlPrefsList;
-	
+
 	private JPanel pnlChart;
-	
+
 	private UserAccount user;
-	
+
 	public EditHealthFrame editHealthFrame;
-	
-	
+	private JPanel pnlSummary;
+	private JPanel pnlCalories;
+	private JPanel pnlPreferences;
+	private JPanel panel_2;
+	private JPanel pnlButton;
+
 	public HealthFrame(UserAccount user) {
 		this.user = user;
-		
+
 		// Window initialization
 		setTitle(title);
-		setSize(800, 600);
+		// setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		JPanel tempPanel = new JPanel();
 		tempPanel.setBackground(Color.PINK);
-		this.getContentPane().add(tempPanel,BorderLayout.CENTER);
-		
-		tempPanel.setLayout(new GridBagLayout());
-		GridBagConstraints cs = new GridBagConstraints();
-		
+		this.getContentPane().add(tempPanel, BorderLayout.CENTER);
+		tempPanel.setLayout(new BoxLayout(tempPanel, BoxLayout.Y_AXIS));
+
+		pnlSummary = new JPanel();
+		tempPanel.add(pnlSummary);
+		pnlSummary.setLayout(new BoxLayout(pnlSummary, BoxLayout.Y_AXIS));
+
+		panel_2 = new JPanel();
+		pnlSummary.add(panel_2);
+		panel_2.setLayout(new GridLayout(0, 1, 0, 0));
+
 		lblTitle = new JLabel("My Health");
-		cs.fill = GridBagConstraints.HORIZONTAL;
-		cs.weightx = 0.9;
-		cs.weighty = 0.2;
-		cs.gridx = 0;
-		cs.gridy = 0;
-		cs.gridwidth = 2;
-		tempPanel.add(lblTitle,cs);
-		
+		panel_2.add(lblTitle);
+		lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Viner Hand ITC", Font.BOLD, 16));
+
+		pnlCalories = new JPanel();
+		pnlCalories.setBorder(new EmptyBorder(10, 10, 10, 10));
+		pnlSummary.add(pnlCalories);
+		pnlCalories.setLayout(new GridLayout(0, 2, 40, 0));
+
 		lblCaloriesPrefix = new JLabel("Calories Per Day:");
-		cs.fill = GridBagConstraints.HORIZONTAL;
-		cs.gridx = 0;
-		cs.gridy = 1;
-		cs.gridwidth = 1;
-		tempPanel.add(lblCaloriesPrefix,cs);
-		
+		lblCaloriesPrefix.setVerticalAlignment(SwingConstants.TOP);
+		pnlCalories.add(lblCaloriesPrefix);
+
 		lblCalories = new JLabel("1200 - 3500");
-		cs.fill = GridBagConstraints.HORIZONTAL;
-		cs.gridx = 1;
-		cs.gridy = 1;
-		cs.gridwidth = 1;
-		tempPanel.add(lblCalories,cs);
-		
+		lblCalories.setVerticalAlignment(SwingConstants.TOP);
+		pnlCalories.add(lblCalories);
+
+		pnlPreferences = new JPanel();
+		pnlPreferences.setBorder(new EmptyBorder(10, 10, 10, 10));
+		pnlSummary.add(pnlPreferences);
+		pnlPreferences.setLayout(new GridLayout(0, 2, 40, 0));
+
 		lblPrefs = new JLabel("Food Preferences");
-		cs.fill = GridBagConstraints.HORIZONTAL;
-		cs.gridx = 0;
-		cs.gridy = 2;
-		cs.gridwidth = 1;
-		tempPanel.add(lblPrefs,cs);
-		
+		lblPrefs.setVerticalAlignment(SwingConstants.TOP);
+		lblPrefs.setHorizontalAlignment(SwingConstants.LEFT);
+		pnlPreferences.add(lblPrefs);
+
 		pnlPrefsList = new JPanel();
-		cs.fill = GridBagConstraints.HORIZONTAL;
-		cs.gridx = 1;
-		cs.gridy = 2;
-		cs.gridwidth = 1;
-		tempPanel.add(pnlPrefsList,cs);
-		initPreferencesList(null);
+		pnlPrefsList.setBorder(null);
+		pnlPreferences.add(pnlPrefsList);
+		pnlPrefsList.setLayout(new BoxLayout(pnlPrefsList, BoxLayout.Y_AXIS));
+
+		pnlButton = new JPanel();
+		pnlSummary.add(pnlButton);
 
 		btnEdit = new JButton("Edit Dietary Preferences");
-		cs.fill = GridBagConstraints.HORIZONTAL;
-		cs.gridx = 0;
-		cs.gridy = 3;
-		cs.gridwidth = 2;
-		btnEdit.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
+		pnlButton.add(btnEdit);
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				if (editHealthFrame == null)
 					editHealthFrame = new EditHealthFrame(user);
-						
+
 				((JFrame) editHealthFrame).setVisible(true);
 			}
 		});
-		tempPanel.add(btnEdit,cs);
-		
+		initPreferencesList(null);
+
 		pnlChart = new JPanel();
 		pnlChart.setBackground(Color.CYAN);
-		cs.fill = GridBagConstraints.BOTH;
-		cs.gridx = 0;
-		cs.gridy = 4;
-		cs.gridwidth = 2;
-		cs.weighty = 0.8;
-		tempPanel.add(pnlChart,cs);
-		
+		tempPanel.add(pnlChart);
+
 		user.addObserver(this);
 		redraw(user);
 
+		pack();
+
 	}
-	
-	private void redraw(UserAccount user){
+
+	private void redraw(UserAccount user) {
 		initialize(user.getDiet());
 		repaint();
 		revalidate();
 	}
-	
-	public void update(Observable o,Object obj){
+
+	public void update(Observable o, Object obj) {
 		DietaryProfile diet = user.getDiet();
-		System.out.println(diet.getCalorieMinimum()+" - "+diet.getCalorieMaximum());
 		redraw(user);
 	}
-	
+
 	public void initialize(DietaryProfile diet) {
-		setCaloricRange(diet.getCalorieMinimum(),diet.getCalorieMaximum());
+		setCaloricRange(diet.getCalorieMinimum(), diet.getCalorieMaximum());
 		List<String> preferences = new ArrayList<String>();
-		
-		if(diet.isLowSodium()) preferences.add("Low Sodium");
-		if(diet.isLowCholesterol()) preferences.add("Low Choleseterol");
-		if(diet.isGlutenFree()) preferences.add("Gluten Free");
-		if(diet.isVegan()) preferences.add("Vegan");
-		
-		initPreferencesList(preferences);		
+
+		if (diet.isLowSodium())
+			preferences.add("Low Sodium");
+		if (diet.isLowCholesterol())
+			preferences.add("Low Choleseterol");
+		if (diet.isGlutenFree())
+			preferences.add("Gluten Free");
+		if (diet.isVegan())
+			preferences.add("Vegan");
+
+		initPreferencesList(preferences);
 	}
-	
-	private void initPreferencesList(List<String> prefs){
+
+	private void initPreferencesList(List<String> prefs) {
 		pnlPrefsList.removeAll();
 
-		pnlPrefsList.setLayout(new BoxLayout(pnlPrefsList,BoxLayout.Y_AXIS));
-		
-		if(prefs == null) return;
-		
+		if (prefs == null)
+			return;
+
 		Iterator<String> it = prefs.iterator();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			JLabel lblPref = new JLabel(it.next());
 			pnlPrefsList.add(lblPref);
 		}
@@ -173,12 +185,9 @@ public class HealthFrame extends JFrame implements Observer{
 	public void removeEditListener(ActionListener l) {
 		btnEdit.removeActionListener(l);
 	}
-	
-	private void setCaloricRange(Integer min,Integer max){
-		lblCalories.setText(min+" - "+max);
+
+	private void setCaloricRange(Integer min, Integer max) {
+		lblCalories.setText(min + " - " + max);
 	}
-
-	
-
 
 }
