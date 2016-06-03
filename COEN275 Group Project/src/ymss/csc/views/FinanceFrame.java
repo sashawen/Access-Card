@@ -1,23 +1,24 @@
 package ymss.csc.views;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import javax.swing.border.LineBorder;
+
+import ymss.csc.models.UserAccount;
+
 import java.awt.Color;
 import javax.swing.border.EmptyBorder;
 
-public class FinanceFrame extends JFrame {
+public class FinanceFrame extends JFrame implements Observer {
 
 	private static final long serialVersionUID = -126850826291601022L;
 
@@ -26,7 +27,13 @@ public class FinanceFrame extends JFrame {
 	private JButton btnDeposit;
 	private JLabel lblCurrentBalance;
 
-	public FinanceFrame() {
+	private FundDepositFrame fundDepositFrame;
+
+	private UserAccount user;
+
+	public FinanceFrame(UserAccount user) {
+		this.user = user;
+
 		// Window initialization
 		setTitle(title);
 		setSize(800, 600);
@@ -41,6 +48,9 @@ public class FinanceFrame extends JFrame {
 
 		initSummaryPanel(tempPanel);
 		initChartPanel(tempPanel);
+
+		user.addObserver(this);
+		redraw(user);
 
 	}
 
@@ -66,6 +76,13 @@ public class FinanceFrame extends JFrame {
 
 		btnDeposit = new JButton("Deposit Funds");
 		btnDeposit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnDeposit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(fundDepositFrame == null) fundDepositFrame = new FundDepositFrame(user);
+				
+				fundDepositFrame.setVisible(true);
+			}
+		});
 		pnlSummary.add(btnDeposit);
 	}
 
@@ -82,6 +99,10 @@ public class FinanceFrame extends JFrame {
 		parent.add(pnlChart);
 	}
 
+	public void redraw(UserAccount user) {
+		setBalance(user.getRemainingBalance());
+	}
+
 	public void setBalance(Double balance) {
 		String strBalance = String.format("$%.2f", balance);
 		lblCurrentBalance.setText(strBalance);
@@ -90,8 +111,9 @@ public class FinanceFrame extends JFrame {
 		lblCurrentBalance.revalidate();
 	}
 
-	public void addDepositListener(ActionListener l) {
-		btnDeposit.addActionListener(l);
+	@Override
+	public void update(Observable o, Object arg) {
+		redraw(user);
 	}
 
 }

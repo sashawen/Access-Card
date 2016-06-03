@@ -6,18 +6,14 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import ymss.csc.models.UserAccount;
+
 import javax.swing.JButton;
-import java.awt.FlowLayout;
-import javax.swing.SwingConstants;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.CardLayout;
 
 public class FundDepositFrame extends JFrame {
 private static final long serialVersionUID = 7093746272356081378L;
@@ -25,8 +21,12 @@ private static final long serialVersionUID = 7093746272356081378L;
 	static final String title = "Deposit Funds";
 	private JTextField tfDeposit;
 	private JButton btnDeposit;
-
-	public FundDepositFrame() {
+	
+	private UserAccount user;
+	
+	public FundDepositFrame(UserAccount user) {
+		this.user = user;
+		
 		// Window initialization
 		setTitle(title);
 		setLocationRelativeTo(null);
@@ -80,6 +80,13 @@ private static final long serialVersionUID = 7093746272356081378L;
 		pnlButtons.add(btnCancel);
 		
 		btnDeposit = new JButton("Deposit");
+		btnDeposit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				Double newBalance = user.getRemainingBalance() + getDeposit();
+				user.setRemainingBalance(newBalance);
+				dispose();
+			}
+		});
 		pnlButtons.add(btnDeposit);
 		
 		parent.add(pnlButtons);
@@ -92,9 +99,5 @@ private static final long serialVersionUID = 7093746272356081378L;
 		}catch(Exception e){
 			return 0.0;
 		}
-	}
-	
-	public void addDepositListener(ActionListener l){
-		btnDeposit.addActionListener(l);
 	}
 }
