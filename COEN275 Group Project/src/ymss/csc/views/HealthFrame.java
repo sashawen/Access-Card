@@ -4,10 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,8 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ymss.csc.models.DietaryProfile;
+import ymss.csc.models.UserAccount;
 
-public class HealthFrame extends JFrame implements IHealthFrame{
+public class HealthFrame extends JFrame implements Observer{
 
 	private static final long serialVersionUID = 724764215279243988L;
 
@@ -34,9 +38,14 @@ public class HealthFrame extends JFrame implements IHealthFrame{
 	
 	private JPanel pnlChart;
 	
+	private UserAccount user;
+	
+	public EditHealthFrame editHealthFrame;
 	
 	
-	public HealthFrame() {
+	public HealthFrame(UserAccount user) {
+		this.user = user;
+		
 		// Window initialization
 		setTitle(title);
 		setSize(800, 600);
@@ -93,6 +102,14 @@ public class HealthFrame extends JFrame implements IHealthFrame{
 		cs.gridx = 0;
 		cs.gridy = 3;
 		cs.gridwidth = 2;
+		btnEdit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if (editHealthFrame == null)
+					editHealthFrame = new EditHealthFrame(user);
+						
+				((JFrame) editHealthFrame).setVisible(true);
+			}
+		});
 		tempPanel.add(btnEdit,cs);
 		
 		pnlChart = new JPanel();
@@ -104,8 +121,33 @@ public class HealthFrame extends JFrame implements IHealthFrame{
 		cs.weighty = 0.8;
 		tempPanel.add(pnlChart,cs);
 		
-		
+		user.addObserver(this);
+		redraw(user);
 
+	}
+	
+	private void redraw(UserAccount user){
+		initialize(user.getDiet());
+		repaint();
+		revalidate();
+	}
+	
+	public void update(Observable o,Object obj){
+		DietaryProfile diet = user.getDiet();
+		System.out.println(diet.getCalorieMinimum()+" - "+diet.getCalorieMaximum());
+		redraw(user);
+	}
+	
+	public void initialize(DietaryProfile diet) {
+		setCaloricRange(diet.getCalorieMinimum(),diet.getCalorieMaximum());
+		List<String> preferences = new ArrayList<String>();
+		
+		if(diet.isLowSodium()) preferences.add("Low Sodium");
+		if(diet.isLowCholesterol()) preferences.add("Low Choleseterol");
+		if(diet.isGlutenFree()) preferences.add("Gluten Free");
+		if(diet.isVegan()) preferences.add("Vegan");
+		
+		initPreferencesList(preferences);		
 	}
 	
 	private void initPreferencesList(List<String> prefs){
@@ -117,9 +159,7 @@ public class HealthFrame extends JFrame implements IHealthFrame{
 		
 		Iterator<String> it = prefs.iterator();
 		while(it.hasNext()){
-			String str = it.next();
-			System.out.println(str);
-			JLabel lblPref = new JLabel(str);
+			JLabel lblPref = new JLabel(it.next());
 			pnlPrefsList.add(lblPref);
 		}
 		pnlPrefsList.repaint();
@@ -138,17 +178,7 @@ public class HealthFrame extends JFrame implements IHealthFrame{
 		lblCalories.setText(min+" - "+max);
 	}
 
-	@Override
-	public void initialize(DietaryProfile diet) {
-		setCaloricRange(diet.getCalorieMinimum(),diet.getCalorieMaximum());
-		List<String> preferences = new ArrayList<String>();
-		
-		if(diet.isLowSodium()) preferences.add("Low Sodium");
-		if(diet.isLowCholesterol()) preferences.add("Low Choleseterol");
-		if(diet.isGlutenFree()) preferences.add("Gluten Free");
-		if(diet.isVegan()) preferences.add("Vegan");
-		
-		initPreferencesList(preferences);		
-	}
+	
+
 
 }

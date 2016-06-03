@@ -2,8 +2,9 @@ package ymss.csc.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
-public class UserAccount {
+public class UserAccount extends Observable{
 
 	private int cardNumber;
 	private String password; // yeah... not so secure
@@ -24,6 +25,9 @@ public class UserAccount {
 
 	public void setDiet(DietaryProfile diet) {
 		this.diet = diet;
+
+		setChanged();
+		notifyObservers();
 	}
 
 	public int getCardNumber() {
@@ -48,5 +52,8 @@ public class UserAccount {
 	
 	public void setRemainingBalance(Double funds){
 		remainingBalance = funds;
+		
+		setChanged();
+		notifyObservers();
 	}
 }
