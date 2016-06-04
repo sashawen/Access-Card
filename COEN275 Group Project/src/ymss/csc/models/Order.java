@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
-public class Order extends Observable{
+public class Order extends Observable implements AccountTransaction{
 
+	private static final String type = "PURCHASE";
+	
 	/**
 	 * Memo, for Cafe's name, etc.
 	 */
@@ -160,6 +162,32 @@ public class Order extends Observable{
 	 */
 	public void setPurchaseDate(Date purchaseDate) {
 		this.purchaseDate = purchaseDate;
+	}
+
+	@Override
+	public Double getAccountChange() {
+		// TODO Auto-generated method stub
+		return - getTotalCost();
+	}
+
+	@Override
+	public Double getBalance() {
+		return balance;
+	}
+	
+	private Double balance;
+
+	public void setBalance(Double balance){
+		this.balance = balance;
+	}
+	
+	@Override
+	public Date getDate() {
+		return purchaseDate;
+	}
+	
+	public static String getType(){
+		return type;
 	}
 
 }

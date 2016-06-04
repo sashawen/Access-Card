@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,32 +13,38 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import ymss.csc.models.FoodItem;
-import ymss.csc.models.FoodVendor;
-import ymss.csc.models.UserAccount;
+import ymss.csc.models.*;
 
-public class JSONDataStore implements PersistentDataStore {
+public class JSONDataStore extends AbstractJSONStore implements PersistentDataStore {
 
-	private String parseString(JSONObject o, String key) {
-		if(!o.containsKey(key)) return null;
-		return (String) o.get(key);
-	}
-
-	public Integer parseInt(JSONObject o, String key) {
-		if(!o.containsKey(key)) return null;
-		return Math.toIntExact((Long) o.get(key));
-	}
-
-	public Double parseDouble(JSONObject o, String key) {
-		if(!o.containsKey(key)) return null;
-		return (double) o.get(key);
-	}
-
-	public Boolean parseBoolean(JSONObject o, String key) {
-		if(!o.containsKey(key)) return null;
-		return (boolean) o.get(key);
-	}
-
+	private static final String FILENAME_USERS = "data/users.json";
+	
+	private static final String USERS_ROOT = "users";
+	private static final String ITEMS_ROOT = "items";
+	
+	private static final String USER_CARDNUMBER = "card_number";
+	private static final String USER_PASSWORD = "password";
+	private static final String USER_BALANCE = "balance";
+	private static final String USER_DIET = "diet";
+	private static final String USER_HISTORY = "history";
+	private static final String TRANSACTION_AMOUNT = "amount";
+	private static final String TRANSACTION_BALANCE = "balance";
+	private static final String TRANSACTION_DATE = "date";
+	private static final String TRANSACTION_MEMO = "memo";
+	private static final String ORDER_ITEMS = "items";
+	private static final String DIET_CALORIEMINIMUM = "calorie_minimum";
+	private static final String DIET_CALORIEMAXIMUM = "calorie_maximum";
+	private static final String DIET_LOWSODIUM = "low_sodium";
+	private static final String DIET_LOWCHOLESTEROL = "low_cholesterol";
+	private static final String DIET_GLUTENFREE = "gluten_free";
+	private static final String DIET_VEGAN = "vegan";
+	
+	private static final String FOOD_ID = "id";
+	private static final String FOOD_NAME = "name";
+	private static final String FOOD_DESCRIPTION = "description";
+	private static final String FOOD_CALORIES = "calories";
+	private static final String FOOD_PRICE = "price";
+	
 	List<UserAccount> accounts = new ArrayList<UserAccount>();
 	List<FoodVendor> vendors = new ArrayList<FoodVendor>();
 	List<FoodItem> items = new ArrayList<FoodItem>();
@@ -64,8 +71,43 @@ public class JSONDataStore implements PersistentDataStore {
 
 	@Override
 	public void updateAccount(UserAccount user) {
-		// TODO Auto-generated method stub
-
+		JSONObject o = new JSONObject();
+		JSONArray arr = new JSONArray();
+		o.put(this.USERS_ROOT, arr);
+		
+		Iterator<UserAccount> it = accounts.iterator();
+		while(it.hasNext()){
+			JSONObject userObj = createUserObject(it.next());
+			arr.add(userObj);
+		}
+		writeJSONToFile(o,this.FILENAME_USERS);		
+	}
+	
+	private JSONObject createUserObject(UserAccount user){
+		JSONObject o = new JSONObject();
+		o.put(this.USER_CARDNUMBER, user.getCardNumber());
+		o.put(this.USER_PASSWORD, user.getPassword());
+		o.put(this.USER_BALANCE, user.getRemainingBalance());
+		o.put(this.USER_DIET, createDietObject(user.getDiet()));
+		o.put(this.USER_HISTORY, createOrderHistory(user.getHistory()));
+		
+		return o;
+	}
+	
+	private JSONObject createDietObject(DietaryProfile diet){
+		JSONObject o = new JSONObject();
+		o.put(this.DIET_CALORIEMINIMUM, diet.getCalorieMinimum());
+		o.put(this.DIET_CALORIEMAXIMUM, diet.getCalorieMaximum());
+		o.put(this.DIET_LOWSODIUM, diet.isLowSodium());
+		o.put(this.DIET_LOWCHOLESTEROL, diet.isLowCholesterol());
+		o.put(this.DIET_GLUTENFREE, diet.isGlutenFree());
+		o.put(this.DIET_VEGAN, diet.isVegan());
+		
+		return o;
+	}
+	
+	private JSONArray createOrderHistory(List<AccountTransaction> history){
+		return new JSONArray();
 	}
 
 	@Override
@@ -93,18 +135,18 @@ public class JSONDataStore implements PersistentDataStore {
 	}
 
 	private FoodItem parseFoodItem(JSONObject item) {
-		Integer id = parseInt(item,"id");
+		Integer id = parseInt(item,this.FOOD_ID,null);
 		if(id == null) return null;
 
 		FoodItem fi = new FoodItem(id);
-		fi.setName(parseString(item, "name"));
-		fi.setCalories(parseInt(item, "calories"));
-		fi.setDescription(parseString(item, "description"));
-		fi.setPrice(parseDouble(item, "price"));
-		fi.setLowSodium(parseBoolean(item, "low_sodium"));
-		fi.setLowCholesterol(parseBoolean(item, "low_cholesterol"));
-		fi.setGlutenFree(parseBoolean(item, "gluten_free"));
-		fi.setVegan(parseBoolean(item, "vegan"));
+		fi.setName(parseString(item, this.FOOD_NAME,""));
+		fi.setCalories(parseInt(item, this.FOOD_CALORIES,0));
+		fi.setDescription(parseString(item, this.FOOD_DESCRIPTION,"Food Or Drink"));
+		fi.setPrice(parseDouble(item, this.FOOD_PRICE,0.00));
+		fi.setLowSodium(parseBoolean(item, this.DIET_LOWSODIUM,false));
+		fi.setLowCholesterol(parseBoolean(item, this.DIET_LOWCHOLESTEROL,false));
+		fi.setGlutenFree(parseBoolean(item, this.DIET_GLUTENFREE,false));
+		fi.setVegan(parseBoolean(item, this.DIET_VEGAN,false));
 
 		return fi;
 
@@ -133,7 +175,7 @@ public class JSONDataStore implements PersistentDataStore {
 			public void parseJSONTree(JSONObject o){
 				items.clear();
 				
-				JSONArray foodItems = (JSONArray) o.get("items");
+				JSONArray foodItems = (JSONArray) o.get(ITEMS_ROOT);
 
 				Iterator<JSONObject> iterator = foodItems.iterator();
 				while (iterator.hasNext()) {
@@ -142,22 +184,84 @@ public class JSONDataStore implements PersistentDataStore {
 			}
 		});
 	}
+
+	
+	
+	private DietaryProfile parseUserDiet(JSONObject diet){
+		DietaryProfile profile = new DietaryProfile();
+		if(diet != null){
+			profile.setCalorieMinimum(parseInt(diet,this.DIET_CALORIEMINIMUM,2000));
+			profile.setCalorieMaximum(parseInt(diet,this.DIET_CALORIEMAXIMUM,2500));
+			profile.setLowSodium(parseBoolean(diet,this.DIET_LOWSODIUM,false));
+			profile.setLowCholesterol(parseBoolean(diet,this.DIET_LOWCHOLESTEROL,false));
+			profile.setGlutenFree(parseBoolean(diet,this.DIET_GLUTENFREE,false));
+			profile.setVegan(parseBoolean(diet,this.DIET_VEGAN,false));
+		}
+		
+		return profile;
+	}
+	
+	private Order parseUserOrder(JSONObject trans){
+		Order order = new Order();
+		order.setMemo(parseString(trans,TRANSACTION_MEMO,"Purchase from Cafe"));
+		order.setBalance(parseDouble(trans,TRANSACTION_BALANCE,0.00));
+		order.setPurchaseDate(parseDate(trans,TRANSACTION_DATE));
+		
+		JSONArray items = parseArray(trans,ORDER_ITEMS);
+		if(items != null){
+			Iterator<Integer> it = items.iterator();
+			while(it.hasNext()){
+				order.addItemToOrder(FoodItem.getItem(it.next()));
+			}
+		}
+		
+		return order;
+	}
+	
+	private Deposit parseUserDeposit(JSONObject trans){
+		Double amt = parseDouble(trans,TRANSACTION_AMOUNT,0.00);
+		Double balance = parseDouble(trans,TRANSACTION_BALANCE,0.00);
+		Date date = parseDate(trans,TRANSACTION_DATE);
+		return new Deposit(amt,balance,date);
+	}
+	
+	private AccountTransaction parseUserTransaction(JSONObject trans){
+		String type = parseString(trans,"type","NONE");
+		
+		if(type.equals(Order.getType())){
+			return parseUserOrder(trans);
+		}else if(type.equals(Deposit.getType())){
+			return parseUserDeposit(trans);
+		}
+		return null;
+	}
+
 	
 	private UserAccount parseUserAccount(JSONObject user){
 		UserAccount acct = new UserAccount();
-		acct.setCardNumber(parseInt(user,"card_number"));
-		acct.setPassword(parseString(user,"password"));
-		acct.setRemainingBalance(parseDouble(user,"balance"));
+		acct.setCardNumber(parseInt(user,USER_CARDNUMBER,null));
+		acct.setPassword(parseString(user,USER_PASSWORD,null));
+		acct.setRemainingBalance(parseDouble(user,USER_BALANCE,0.00));
+		acct.setDiet(parseUserDiet(parseObject(user,USER_DIET)));
+		
+		JSONArray history = parseArray(user,USER_HISTORY);
+		if(history != null){
+			Iterator<JSONObject> it = history.iterator();
+			while(it.hasNext()){
+				acct.addTransaction(parseUserTransaction(it.next()));
+			}
+		}
 		
 		return acct;
 	}
 	
+	
 	private void loadUsers(){
-		parseJSONFile("data/users.json",new MyJSONParser(){
+		parseJSONFile(this.FILENAME_USERS,new MyJSONParser(){
 			public void parseJSONTree(JSONObject o){
 				accounts.clear();
 				
-				JSONArray users = (JSONArray) o.get("users");
+				JSONArray users = (JSONArray) o.get(USERS_ROOT);
 				
 				Iterator<JSONObject> iterator = users.iterator();
 				while(iterator.hasNext()){

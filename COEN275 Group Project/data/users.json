@@ -1,10 +1,1 @@
-{
-"users":[
-		{
-			"card_number":774404,
-			"username":"scott",
-			"password":"admin",
-			"balance":1.50
-		}
-	]
-}
+{"users":[{"password":"admin","card_number":774404,"balance":6.5,"diet":{"low_cholesterol":true,"calorie_minimum":2900,"low_sodium":true,"vegan":true,"gluten_free":true,"calorie_maximum":2900},"history":[]}]}

@@ -12,11 +12,19 @@ public class UserAccount extends Observable{
 	
 	private double remainingBalance;
 	
-	List<Order> orderHistory = new ArrayList<Order>();
+	List<AccountTransaction> history = new ArrayList<AccountTransaction>();
 	
 	public UserAccount(){
 		// nothing for now...
 		diet = new DietaryProfile();
+	}
+	
+	public void addTransaction(AccountTransaction t){
+		history.add(t);
+	}
+	
+	public List<AccountTransaction> getHistory(){
+		return history;
 	}
 
 	public DietaryProfile getDiet() {

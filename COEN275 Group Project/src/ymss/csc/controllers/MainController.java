@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -12,7 +14,7 @@ import ymss.csc.models.*;
 import ymss.csc.stores.*;
 import ymss.csc.views.*;
 
-public class MainController {
+public class MainController implements Observer{
 
 	// Frames
 	private LoginFrame loginFrame;
@@ -35,6 +37,7 @@ public class MainController {
 		UserAccount ua = dataStore.getAccount(cardNumber);
 		if (ua != null && ua.getPassword().equals(password)) {
 			currentUser = ua;
+			currentUser.addObserver(this);
 			return true;
 		}
 		return false;
@@ -146,5 +149,13 @@ public class MainController {
 	 */
 	public static void main(String[] args) {
 		MainController mc = new MainController();
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if(arg0 instanceof UserAccount){
+			dataStore.updateAccount(currentUser);
+		}
+		
 	}
 }
