@@ -3,39 +3,12 @@ package ymss.csc.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cafe implements FoodVendor {
+public class Cafe extends AbstractVendor{
 
-	private String name;
-	private String description = "";
-
-	private List<FoodItem> menu = new ArrayList<FoodItem>();
-
-	private Order cart = new Order();
-
-	public Cafe(String name) {
-		this.name = name;
-	}
+	public static final String VENDOR_TYPE = "CAFE";
 	
-	public String getName(){
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void addItemToMenu(FoodItem item) {
-		menu.add(item);
-	}
-
-	public void removeItemFromMenu(FoodItem item) {
-		menu.remove(item);
-	}
-
+	private Order cart = new Order();
+	
 	public void addItemToCart(FoodItem item) {
 		cart.addItemToOrder(item);
 	}
@@ -48,8 +21,8 @@ public class Cafe implements FoodVendor {
 		return cart;
 	}
 
-	public void purchase() {
-		cart = new Order(); // (reset)
+	public void clearCart(){
+		cart.clear();
 	}
 
 	public List<FoodItem> getMenu() {

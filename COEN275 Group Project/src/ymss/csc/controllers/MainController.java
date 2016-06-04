@@ -29,7 +29,7 @@ public class MainController implements Observer{
 	private PersistentDataStore dataStore;
 	private Cafe dummyCafe;
 	private VendingMachine dummyVendingMachine;
-
+	
 	// Application "State"
 	private UserAccount currentUser;
 
@@ -45,7 +45,7 @@ public class MainController implements Observer{
 
 	public void launchMainFrame() {
 		if (mainFrame == null)
-			mainFrame = new MainFrame();
+			mainFrame = new MainFrame(dataStore.getVendors());
 
 		mainFrame.addOpenCafeListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -98,7 +98,7 @@ public class MainController implements Observer{
 		mainFrame.setVisible(true);
 	}
 
-	private void initFoodVendor(FoodVendor vendor) {
+	private void initFoodVendor(AbstractVendor vendor) {
 		if (vendor == null)
 			return;
 
@@ -115,7 +115,7 @@ public class MainController implements Observer{
 		dataStore.init();
 
 		dummyVendingMachine = new VendingMachine();
-		dummyCafe = new Cafe("Dummy");
+		dummyCafe = new Cafe();
 		initFoodVendor(dummyVendingMachine);
 		initFoodVendor(dummyCafe);
 

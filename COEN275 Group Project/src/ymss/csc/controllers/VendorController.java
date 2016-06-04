@@ -18,7 +18,7 @@ public class VendorController {
 
 	private UserAccount user;
 
-	public void launch(UserAccount user, FoodVendor vendor) {
+	public void launch(UserAccount user, AbstractVendor vendor) {
 		this.user = user;
 
 		if (vendor instanceof Cafe) {

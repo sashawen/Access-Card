@@ -1,0 +1,69 @@
+{
+"vendors":[
+{
+	"id":0,
+	"type":"CAFE",
+	"name":"Cafe Ole",
+	"description":"Tacky mexican joint with ok food",
+	"latitude":50.0,
+	"longitude":50.0,
+	"menu":[
+		0,
+		1,
+		2
+	]
+},
+{
+	"id":1,
+	"type":"CAFE",
+	"name":"540 Pizza",
+	"description":"Tacky mexican joint with ok food",
+	"latitude":50.0,
+	"longitude":50.0,
+	"menu":[
+		0,
+		1,
+		2
+	]
+},
+{
+	"id":2,
+	"type":"CAFE",
+	"name":"Saute",
+	"description":"Tacky mexican joint with ok food",
+	"latitude":50.0,
+	"longitude":50.0,
+	"menu":[
+		0,
+		1,
+		2
+	]
+},
+{
+	"id":3,
+	"type":"CAFE",
+	"name":"Bistro",
+	"description":"Tacky mexican joint with ok food",
+	"latitude":50.0,
+	"longitude":50.0,
+	"menu":[
+		0,
+		1,
+		2
+	]
+},
+{
+	"id":4,
+	"type":"VENDING_MACHINE",
+	"name":"Engineering",
+	"description":"Tacky mexican joint with ok food",
+	"latitude":50.0,
+	"longitude":50.0,
+	"menu":[
+		0,
+		1,
+		2
+	]
+}
+]
+}

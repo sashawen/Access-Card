@@ -79,10 +79,20 @@ public class Order extends Observable implements AccountTransaction{
 		if (!items.containsKey(id))
 			return;
 
-		quantities.put(id, quantities.get(id) - 1);
+		int quant = quantities.get(id);
+		if(quant > 0){
+			quantities.put(id,quant - 1);
+		}
 		
 		setChanged();
 		notifyObservers();
+	}
+	
+	public void clear(){
+		Iterator<Integer> it = quantities.keySet().iterator();
+		while(it.hasNext()){
+			quantities.put(it.next(),0);			
+		}
 	}
 	
 	public List<FoodItem> getItems(){
