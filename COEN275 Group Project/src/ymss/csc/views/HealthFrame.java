@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -18,7 +20,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import ymss.csc.models.AccountTransaction;
 import ymss.csc.models.DietaryProfile;
+import ymss.csc.models.Order;
 import ymss.csc.models.UserAccount;
 import ymss.csc.views.charts.BarChart;
 
@@ -63,6 +67,60 @@ public class HealthFrame extends JFrame implements Observer {
 	private static final Color COLOR_OUTRANGE = new Color(255, 68, 35);
 
 	private BarChart chart;
+
+	private Boolean onSameDay(Date a, Date b){
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(a);
+		cal2.setTime(b);
+		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+		                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+		return sameDay;
+	}
+	
+	private List<String> getPastWeekCaptions(){
+		
+		List<String> dates = new ArrayList<String>();
+		
+		for(int i = -6; i <= 0; i++){
+			Calendar day = Calendar.getInstance();
+			day.setTime(new Date());
+			day.set(Calendar.DAY_OF_YEAR,day.get(Calendar.DAY_OF_YEAR) + i);
+			String datestring = String.format("%d/%d", day.get(Calendar.MONTH)+1,day.get(Calendar.DAY_OF_MONTH));
+			dates.add(datestring);
+		}
+		return dates;
+	}
+	
+	private Double getCaloriesOnDay(UserAccount user,Date date){
+		// Assumes linear order history.
+		List<AccountTransaction> trans = user.getHistory();
+		Iterator<AccountTransaction> it = trans.iterator();
+		Double totalCals = 0.0;
+		while(it.hasNext()){
+			AccountTransaction t = it.next();
+			if(t instanceof Order){
+				Order order = (Order) t;
+				if(onSameDay(order.getDate(),date)){
+					totalCals = totalCals + order.getTotalCalories();
+				}
+			}
+		}
+		return totalCals;
+	}
+	
+	private List<Double> getPastWeekCalories(UserAccount user){
+		List<Double> cals = new ArrayList<Double>();
+
+		for (int i = -6; i <= 0; i++) {
+			Calendar day = Calendar.getInstance();
+			day.setTime(new Date());
+			day.set(Calendar.DAY_OF_YEAR, day.get(Calendar.DAY_OF_YEAR) + i);
+			Date d = day.getTime();
+			cals.add(getCaloriesOnDay(user, d));
+		}
+		return cals;
+	}
 	
 	public HealthFrame(UserAccount user) {
 		this.user = user;
@@ -147,15 +205,14 @@ public class HealthFrame extends JFrame implements Observer {
 		chart.setChartTitle("Daily Caloric Intake");
 		chart.setRangeMin((double) user.getDiet().getCalorieMinimum());
 		chart.setRangeMax((double) user.getDiet().getCalorieMaximum());
-		
+
 		chart.clear();
-		chart.addDatum("5/27", 1800.0);
-		chart.addDatum("5/28", 2000.0);
-		chart.addDatum("5/29", 2500.0);
-		chart.addDatum("5/30", 2200.0);
-		chart.addDatum("5/31", 1900.0);
-		chart.addDatum("6/1", 2600.0);
-		chart.addDatum("6/2", 2400.0);
+		
+		List<String> captions = getPastWeekCaptions();
+		List<Double> values = this.getPastWeekCalories(user);
+		for(int i = 0; i < captions.size(); i++){
+			chart.addDatum(captions.get(i), values.get(i));
+		}
 
 		pnlChart.add(chart, BorderLayout.CENTER);
 
@@ -168,8 +225,8 @@ public class HealthFrame extends JFrame implements Observer {
 
 	private void redraw(UserAccount user) {
 		initialize(user.getDiet());
-		chart.setRangeMin((double)user.getDiet().getCalorieMinimum());
-		chart.setRangeMax((double)user.getDiet().getCalorieMaximum());
+		chart.setRangeMin((double) user.getDiet().getCalorieMinimum());
+		chart.setRangeMax((double) user.getDiet().getCalorieMaximum());
 		repaint();
 		revalidate();
 	}

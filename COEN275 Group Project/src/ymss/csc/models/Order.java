@@ -36,6 +36,11 @@ public class Order extends Observable implements AccountTransaction{
 	private Boolean purchased;
 	
 	/**
+	 * Used when the order is read from file, with no items.
+	 */
+	private Integer totalCaloriesFromFile;
+	
+	/**
 	 * Constructor
 	 */
 	public Order() {
@@ -50,6 +55,10 @@ public class Order extends Observable implements AccountTransaction{
 		purchased = true;
 		setChanged();
 		notifyObservers();
+	}
+	
+	public void setTotalCaloriesFromFile(Integer cal){
+		totalCaloriesFromFile = cal;
 	}
 	
 	
@@ -136,6 +145,8 @@ public class Order extends Observable implements AccountTransaction{
 
 		int calories = 0;
 
+		if(purchased && items.size() == 0) return totalCaloriesFromFile;
+		
 		Iterator<Integer> it = items.keySet().iterator();
 		while (it.hasNext()) {
 			int foodId = it.next();
@@ -145,6 +156,7 @@ public class Order extends Observable implements AccountTransaction{
 				calories = calories + quantity * item.getCalories();
 			}
 		}
+	
 		return calories;
 
 	}

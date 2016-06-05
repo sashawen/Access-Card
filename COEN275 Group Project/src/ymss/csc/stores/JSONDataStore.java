@@ -33,6 +33,7 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 	private static final String TRANSACTION_MEMO = "memo";
 	private static final String TRANSACTION_TYPE = "type";
 	private static final String ORDER_ITEMS = "items";
+	private static final String ORDER_TOTALCALORIES = "total_calories";
 	private static final String DIET_CALORIEMINIMUM = "calorie_minimum";
 	private static final String DIET_CALORIEMAXIMUM = "calorie_maximum";
 	private static final String DIET_LOWSODIUM = "low_sodium";
@@ -135,6 +136,7 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 			}
 			o.put(this.ORDER_ITEMS, arr);
 			o.put(this.TRANSACTION_TYPE, Order.getType());
+			o.put(this.ORDER_TOTALCALORIES, ((Order)trans).getTotalCalories());
 
 		}else if(trans instanceof Deposit){
 			o.put(this.TRANSACTION_TYPE, Deposit.getType());
@@ -224,6 +226,10 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 		order.setMemo(parseString(trans, TRANSACTION_MEMO, "Purchase from Cafe"));
 		order.setBalance(parseDouble(trans, TRANSACTION_BALANCE, 0.00));
 		order.setPurchaseDate(parseDate(trans, TRANSACTION_DATE));
+		
+		// order has been purchased... (this sets flag)
+		order.setTotalCaloriesFromFile(parseInt(trans,ORDER_TOTALCALORIES,0));
+		order.purhcase();
 
 		JSONArray items = parseArray(trans, ORDER_ITEMS);
 		if (items != null) {
