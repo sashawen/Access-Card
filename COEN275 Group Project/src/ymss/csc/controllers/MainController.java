@@ -44,25 +44,7 @@ public class MainController implements Observer{
 
 	public void launchMainFrame() {
 		if (mainFrame == null)
-			mainFrame = new MainFrame(dataStore.getVendors());
-
-		mainFrame.addOpenCafeListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (cafeFrame == null)
-					cafeFrame = new CafeFrame(currentUser, dummyCafe);
-
-				cafeFrame.setVisible(true);
-			}
-		});
-
-		mainFrame.addOpenVendingMachineListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (vendingMachineFrame == null)
-					vendingMachineFrame = new VendingMachineFrame(currentUser, dummyVendingMachine);
-
-				vendingMachineFrame.setVisible(true);
-			}
-		});
+			mainFrame = new MainFrame(currentUser,dataStore.getVendors());
 
 		mainFrame.addOpenFinanceListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

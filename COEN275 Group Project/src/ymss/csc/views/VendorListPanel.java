@@ -81,7 +81,8 @@ public class VendorListPanel extends AbstractVendorSelectionPanel {
 
 					// Double-click detected
 					int index = list.locationToIndex(evt.getPoint());
-					JOptionPane.showMessageDialog(null, "You clicked on "+cafes.get(index));
+					//JOptionPane.showMessageDialog(null, "You clicked on "+cafes.get(index));
+					vendorSelected(cafes.get(index));
 				}
 			}
 		});
@@ -111,7 +112,7 @@ public class VendorListPanel extends AbstractVendorSelectionPanel {
 
 					// Double-click detected
 					int index = list.locationToIndex(evt.getPoint());
-					JOptionPane.showMessageDialog(null, "You clicked on "+vendingMachines.get(index));
+					vendorSelected(vendingMachines.get(index));
 				}
 			}
 		});

@@ -41,7 +41,9 @@ import javax.swing.event.ListSelectionListener;
 
 import ymss.csc.models.AbstractVendor;
 import ymss.csc.models.Cafe;
+import ymss.csc.models.UserAccount;
 import ymss.csc.models.VendingMachine;
+import ymss.csc.views.AbstractVendorSelectionPanel.VendorSelectionListener;
 
 import java.awt.Color;
 import java.awt.CardLayout;
@@ -57,7 +59,6 @@ public class MainFrame extends JFrame {
 	private JButton btnFinance;
 	private JButton btnHealth;
 	private JPanel panel;
-	private JPanel pnlCafeList;
 	private JPanel panel_4;
 	private JPanel pnlCafeSelection;
 	private JList list;
@@ -66,13 +67,16 @@ public class MainFrame extends JFrame {
 
 	private List<AbstractVendor> vendors;
 
+	private UserAccount user;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param vendors
 	 *            Vendors to add to the Map and List
 	 */
-	public MainFrame(List<AbstractVendor> vendors) {
+	public MainFrame(UserAccount user, List<AbstractVendor> vendors) {
+		this.user = user;
 		this.vendors = vendors;
 
 		// Window initialization
@@ -91,60 +95,58 @@ public class MainFrame extends JFrame {
 		panel.add(pnlCafeSelection);
 		pnlCafeSelection.setLayout(new BorderLayout(0, 0));
 
+		VendorSelectionListener selListener = new VendorSelectionListener() {
+
+			@Override
+			public void vendorSelected(AbstractVendor vendor) {
+				openFrameForVendor(vendor);
+			}
+		};
+
 		VendorMapPanel pnlMap = new VendorMapPanel(vendors);
 		pnlCafeSelection.add(pnlMap, BorderLayout.CENTER);
+		pnlMap.setVendorSelectionListener(selListener);
 
-		pnlCafeList = new VendorListPanel(vendors);
+		VendorListPanel pnlCafeList = new VendorListPanel(vendors);
 		pnlCafeSelection.add(pnlCafeList, BorderLayout.EAST);
+		pnlCafeList.setVendorSelectionListener(selListener);
+	}
+
+	private JFrame buyFoodFrame;
+
+	private void openFrameForVendor(AbstractVendor vendor) {
+		if (buyFoodFrame != null)
+			buyFoodFrame.dispose();
+
+		if (vendor instanceof Cafe) {
+			buyFoodFrame = new CafeFrame(user, (Cafe) vendor);
+			buyFoodFrame.setVisible(true);
+		} else if (vendor instanceof VendingMachine) {
+			buyFoodFrame = new VendingMachineFrame(user, (VendingMachine) vendor);
+			buyFoodFrame.setVisible(true);
+		}
 	}
 
 	private void addQuickFlowButtons(JPanel panel) {
 		JPanel tempPanel = new JPanel();
 		tempPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.add(tempPanel, BorderLayout.NORTH);
-
-		btnCafe = new JButton("Cafe Frame");
-		btnVendingMachine = new JButton("Vending Machine Frame");
-		btnFinance = new JButton("Finance Frame");
-		btnHealth = new JButton("Health Frame");
 		tempPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		tempPanel.add(btnCafe);
-		tempPanel.add(btnVendingMachine);
+		btnFinance = new JButton("Finance Frame");
 		tempPanel.add(btnFinance);
+
+		btnHealth = new JButton("Health Frame");
 		tempPanel.add(btnHealth);
-	}
 
-	
-	public void addOpenCafeListener(ActionListener l) {
-		btnCafe.addActionListener(l);
-	}
-
-	public void removeOpenCafeListener(ActionListener l) {
-		btnCafe.removeActionListener(l);
-	}
-
-	public void addOpenVendingMachineListener(ActionListener l) {
-		btnVendingMachine.addActionListener(l);
-	}
-
-	public void removeOpenVendingMachineListener(ActionListener l) {
-		btnVendingMachine.removeActionListener(l);
 	}
 
 	public void addOpenFinanceListener(ActionListener l) {
 		btnFinance.addActionListener(l);
 	}
 
-	public void removeOpenFinanceListener(ActionListener l) {
-		btnFinance.removeActionListener(l);
-	}
-
 	public void addOpenHealthListener(ActionListener l) {
 		btnHealth.addActionListener(l);
 	}
 
-	public void removeOpenHealthListener(ActionListener l) {
-		btnHealth.removeActionListener(l);
-	}
 }

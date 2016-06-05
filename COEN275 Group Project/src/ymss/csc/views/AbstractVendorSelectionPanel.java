@@ -25,6 +25,6 @@ public abstract class AbstractVendorSelectionPanel extends JPanel {
 	}
 	
 	public void vendorSelected(AbstractVendor vendor){
-		selectionListener.vendorSelected(vendor);
+		if(selectionListener != null) selectionListener.vendorSelected(vendor);
 	}
 }

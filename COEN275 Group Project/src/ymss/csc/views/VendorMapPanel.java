@@ -8,18 +8,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import ymss.csc.models.AbstractVendor;
+import ymss.csc.models.Cafe;
+import ymss.csc.models.VendingMachine;
 
 public class VendorMapPanel extends AbstractVendorSelectionPanel {
 
@@ -29,6 +34,11 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 
 	private JPanel pnlIconLabel;
 	private JLabel lblCafeVMIcons;
+	
+	private JLayeredPane lpnMap;
+	private JPanel pnlMapImage;
+	private JPanel pnlMapIcons;
+	private JLabel lblMapImage;
 
 	public VendorMapPanel(List<AbstractVendor> vendors) {
 		super(vendors);
@@ -39,65 +49,148 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 	private void initialize() {
 		this.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLayeredPane layeredPane = new JLayeredPane();
-		this.add(layeredPane);
-		layeredPane.setLayout(null);
+		lpnMap = new JLayeredPane();
+		this.add(lpnMap);
+		lpnMap.setLayout(null);
 
-		JPanel panel_6 = new JPanel();
-		panel_6.setBounds(layeredPane.getBounds());
-		panel_6.setBorder(null);
-		layeredPane.setLayer(panel_6, 1);
-		layeredPane.add(panel_6);
-		panel_6.setLayout(null);
+		pnlMapIcons = new JPanel();
+		lpnMap.setLayer(pnlMapIcons, 1);
+		lpnMap.add(pnlMapIcons);
+		pnlMapIcons.setLayout(null);
+		pnlMapIcons.setOpaque(false);
 
-		addMapIcons(panel_6);
-		panel_6.setOpaque(false);
+		pnlMapImage = new JPanel();
+		lpnMap.setLayer(pnlMapImage, 0);
+		lpnMap.add(pnlMapImage);
+		pnlMapImage.setLayout(new BorderLayout(0, 0));
 
-		JPanel panel_5 = new JPanel();
-		panel_5.setBounds(layeredPane.getBounds());
+		lblMapImage = new JLabel("New label");
+		pnlMapImage.add(lblMapImage);
 
-		layeredPane.setLayer(panel_5, 0);
-		layeredPane.add(panel_5);
-		panel_5.setLayout(new BorderLayout(0, 0));
-
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		panel_5.add(lblNewLabel_1);
-
-		layeredPane.addComponentListener(new ComponentListener() {
+		lpnMap.addComponentListener(new ComponentListener() {
 
 			@Override
 			public void componentHidden(ComponentEvent arg0) {
-				panel_5.setBounds(layeredPane.getBounds());
-				panel_6.setBounds(layeredPane.getBounds());
-				lblNewLabel_1.setIcon(scaleImage(MAP_IMAGE, layeredPane.getWidth(), layeredPane.getHeight()));
-
+				redraw();
 			}
 
 			@Override
 			public void componentMoved(ComponentEvent arg0) {
-				panel_5.setBounds(layeredPane.getBounds());
-				panel_6.setBounds(layeredPane.getBounds());
-				lblNewLabel_1.setIcon(scaleImage(MAP_IMAGE, layeredPane.getWidth(), layeredPane.getHeight()));
-
+				redraw();
 			}
 
 			@Override
 			public void componentResized(ComponentEvent arg0) {
-				panel_5.setBounds(layeredPane.getBounds());
-				panel_6.setBounds(layeredPane.getBounds());
-				lblNewLabel_1.setIcon(scaleImage(MAP_IMAGE, layeredPane.getWidth(), layeredPane.getHeight()));
-
+				redraw();
 			}
 
 			@Override
 			public void componentShown(ComponentEvent arg0) {
-				panel_5.setBounds(layeredPane.getBounds());
-				panel_6.setBounds(layeredPane.getBounds());
-				lblNewLabel_1.setIcon(scaleImage(MAP_IMAGE, layeredPane.getWidth(), layeredPane.getHeight()));
-
+				redraw();
 			}
 
 		});
+		// temporary
+		/*
+		lpnMap.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Integer x = arg0.getX();
+				Integer y = arg0.getY();
+				Integer dx = ((JLayeredPane) arg0.getSource()).getWidth();
+				Integer dy = ((JLayeredPane) arg0.getSource()).getHeight();
+				
+				Double adj_x = x*100.0 / dx.doubleValue();
+				Double adj_y = y*100.0 / dy.doubleValue();
+				
+				String c = String.format("(%.3f,%.3f)", adj_x,adj_y);
+				System.out.println(c);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});*/
+		redraw();
+	}
+	
+	private void redraw(){
+		pnlMapImage.setBounds(lpnMap.getBounds());
+		pnlMapIcons.setBounds(lpnMap.getBounds());
+		pnlMapIcons.removeAll();
+		addMapIcons(pnlMapIcons);
+		
+		lblMapImage.setIcon(scaleImage(MAP_IMAGE, lpnMap.getWidth(), lpnMap.getHeight()));
+	}
+	
+	private static final String ICON_CAFE = "pictures/cafeIcon.png";
+	private static final String ICON_VENDINGMACHINE = "pictures/vmIcon.png";
+	private static final Integer ICON_PROPERTY_WIDTH = 30;
+	private static final Integer ICON_PROPERTY_HEIGHT = 40;
+	
+	private void addMapIcon(JPanel parent, AbstractVendor vendor){
+		JButton btnTest = new JButton();
+		
+		String imageUrl;
+		String hoverText;
+		if(vendor instanceof Cafe){
+			imageUrl = this.ICON_CAFE;
+			hoverText = vendor.getName();
+		}else if(vendor instanceof VendingMachine){
+			imageUrl = this.ICON_VENDINGMACHINE;
+			hoverText = "Vending Machine";
+		}else{
+			System.out.println("Unrecognized Vendor");
+			return;
+		}
+		
+		Double lat = vendor.getLatitude();
+		Double lon = vendor.getLongitude();
+		
+		Integer x = (int) Math.round(lat*lpnMap.getWidth() / 100.0);
+		Integer y = (int) Math.round(lon*lpnMap.getHeight() / 100.0);
+		
+		Integer adj_x = x - ICON_PROPERTY_WIDTH / 2;
+		Integer adj_y = y - ICON_PROPERTY_HEIGHT;
+		
+		ImageIcon img = this.scaleImage(imageUrl, ICON_PROPERTY_WIDTH, ICON_PROPERTY_HEIGHT);
+		btnTest.setIcon(img);
+		btnTest.setBounds(adj_x,adj_y, img.getIconWidth(), img.getIconHeight());
+		btnTest.setOpaque(false);
+		btnTest.setContentAreaFilled(false);
+		btnTest.setBorderPainted(false);
+		btnTest.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				if (evt.getClickCount() == 2) {
+					vendorSelected(vendor);
+				}
+			}
+		});
+		this.addLabelPopupToIconButton(btnTest, hoverText);
+		
+		parent.add(btnTest);
 	}
 
 	private void addMapIcons(JPanel parent) {
@@ -108,37 +201,26 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 		pnlIconLabel.setBackground(Color.WHITE);
 		pnlIconLabel.setVisible(false);
 
-		JButton btnTest = new JButton();
-		ImageIcon img = new ImageIcon("pictures/cafeIcon.png");
-		btnTest.setIcon(img);
-		btnTest.setBounds(20, 50, img.getIconWidth(), img.getIconHeight());
-		btnTest.setOpaque(false);
-		btnTest.setContentAreaFilled(false);
-		btnTest.setBorderPainted(false);
-		btnTest.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "You clicked a cafe icon!");
-			}
-		});
-		this.addLabelPopupToIconButton(btnTest, "Cafe");
+		/*
+		Cafe c = new Cafe();
+		c.setName("Cafe");
+		c.setCoordinates(20.0, 20.0);
+		
+		addMapIcon(parent,c);
 
-		JButton btnTest2 = new JButton();
-		ImageIcon img2 = new ImageIcon("pictures/vmIcon.png");
-		btnTest2.setIcon(img2);
-		btnTest2.setBounds(140, 140, img2.getIconWidth(), img2.getIconHeight());
-		btnTest2.setOpaque(false);
-		btnTest2.setContentAreaFilled(false);
-		btnTest2.setBorderPainted(false);
-		btnTest2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "You clicked a vending machine icon!");
-			}
-		});
-		this.addLabelPopupToIconButton(btnTest2, "Vending Machine");
+		VendingMachine vm = new VendingMachine();
+		vm.setCoordinates(140.0, 140.0);
+		
+		addMapIcon(parent,vm);
+		*/
+		
+		Iterator<AbstractVendor> it = this.vendors.iterator();
+		while(it.hasNext()){
+			addMapIcon(parent,it.next());
+		}
+		
 
 		parent.add(pnlIconLabel);
-		parent.add(btnTest);
-		parent.add(btnTest2);
 	}
 
 	public ImageIcon scaleImage(String filename, Integer width, Integer height) {
