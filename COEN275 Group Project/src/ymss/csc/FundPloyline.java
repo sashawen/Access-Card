@@ -25,14 +25,14 @@ public class FundPloyline extends JFrame {
       // get Account balance
 	   Fund b = new Fund(0.00);
       double balance = b.getBalance();
-      g.setStroke(new BasicStroke(5.0f));
+      //g.setStroke(new BasicStroke(5.0f));
       
       double startX = 50;
       double startY = 50;
       
       
-      Line2D line = new Line2D.Double(startX,startY,endX,endY); 
-      g.draw(line);
+      //Line2D line = new Line2D.Double(startX,startY,endX,endY); 
+      //g.draw(line);
 
       // if balance is positive, draw graph in black
       if ( balance >= 0.00 ) {

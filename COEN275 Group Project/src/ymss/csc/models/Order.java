@@ -32,12 +32,26 @@ public class Order extends Observable implements AccountTransaction{
 	 */
 	private Date purchaseDate;
 
+	private Boolean purchased;
+	
 	/**
 	 * Constructor
 	 */
 	public Order() {
-
+		purchased = false;
 	};
+	
+	public Boolean isPurchased(){
+		return purchased;
+	}
+	
+	public void purhcase(){
+		purchased = true;
+		setChanged();
+		notifyObservers();
+	}
+	
+	
 
 	public String getMemo() {
 		return memo;

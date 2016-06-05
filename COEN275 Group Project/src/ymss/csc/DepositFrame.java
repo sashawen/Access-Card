@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Area;
+import java.util.Observable;
 import java.util.Observer;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
@@ -107,7 +108,7 @@ public class DepositFrame extends JFrame implements Observer{
 		        repaint();
 		      }
 		    });
-		controls.add(expensePeriod);
+		//controls.add(expensePeriod);
 		
 		expensePeriod.setBounds(220, 130, 134, 27);
 		contentPane.add(expensePeriod);
@@ -125,25 +126,31 @@ public class DepositFrame extends JFrame implements Observer{
 	        RenderingHints.VALUE_ANTIALIAS_ON);
 	    
 	    // Retrieve the selection option from the combo box.
-	    String option = (String)expensePeriod.getSelectedItem();
-	    if (option.equals("7 days")) {
+	    //String option = (String)expensePeriod.getSelectedItem();
+	    //f (option.equals("7 days")) {
 	      // Just draw the outlines and return.
-	       g2.draw(polyline7);
+	       //g2.draw(polyline7);
 	      
-	      return;
-	    }
+	     // return;
+	    //}
 	    // Create Areas from the shapes.
-	    Area areaOne = new Area(ShapeOne);
+	    //Area areaOne = new Area(ShapeOne);
 	    //Area areaTwo = new Area(mShapeTwo);
 	    // Combine the Areas according to the selected option.
-	    if (option.equals("7 days")) areaOne.add(g2.draw(polyline7);
+	    //if (option.equals("7 days")) areaOne.add(g2.draw(polyline7);
 	   
 	    // Fill the resulting Area.
 	    g2.setPaint(Color.orange);
-	    g2.fill(areaOne);
+	    //g2.fill(areaOne);
 	    
 	   
 	  }
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
+	}
 	}
 
 

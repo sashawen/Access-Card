@@ -21,9 +21,8 @@ public class MainController implements Observer{
 	private MainFrame mainFrame;
 	private HealthFrame healthFrame;
 	private FinanceFrame financeFrame;
-
-	// Controllers
-	private VendorController vendorController = new VendorController();
+	private CafeFrame cafeFrame;
+	private VendingMachineFrame vendingMachineFrame;
 
 	// Stores
 	private PersistentDataStore dataStore;
@@ -49,31 +48,19 @@ public class MainController implements Observer{
 
 		mainFrame.addOpenCafeListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vendorController.launch(currentUser, dummyCafe);
-				vendorController.setOrderListener(new VendorController.OrderSubmissionListener() {
+				if (cafeFrame == null)
+					cafeFrame = new CafeFrame(currentUser, dummyCafe);
 
-					@Override
-					public void orderSubmitted(Order order) {
-						Double newBalance = currentUser.getRemainingBalance() - order.getTotalCost();
-						currentUser.setRemainingBalance(newBalance);
-						vendorController.launch(currentUser, dummyCafe); // (relaunch)
-					}
-				});
+				cafeFrame.setVisible(true);
 			}
 		});
 
 		mainFrame.addOpenVendingMachineListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vendorController.launch(currentUser, dummyVendingMachine);
-				vendorController.setOrderListener(new VendorController.OrderSubmissionListener() {
+				if (vendingMachineFrame == null)
+					vendingMachineFrame = new VendingMachineFrame(currentUser, dummyVendingMachine);
 
-					@Override
-					public void orderSubmitted(Order order) {
-						Double newBalance = currentUser.getRemainingBalance() - order.getTotalCost();
-						currentUser.setRemainingBalance(newBalance);
-						vendorController.launch(currentUser, dummyVendingMachine); // (relaunch)
-					}
-				});
+				vendingMachineFrame.setVisible(true);
 			}
 		});
 
@@ -109,7 +96,7 @@ public class MainController implements Observer{
 			vendor.addItemToMenu(it.next());
 		}
 	}
-
+	
 	public MainController() {
 		dataStore = new JSONDataStore();
 		dataStore.init();

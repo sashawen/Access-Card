@@ -21,6 +21,8 @@ public class UserAccount extends Observable{
 	
 	public void addTransaction(AccountTransaction t){
 		history.add(t);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public List<AccountTransaction> getHistory(){

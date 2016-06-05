@@ -51,13 +51,13 @@ public class FundController extends JPanel {
       );
       JButton viewButton = new JButton( "View Expense" );
 
-      viewButton.addActionListener(
-         new ActionListener() {
-        	new DepositFrame().updateDisplay();
-           
-             // end method actionPerformed
-         }
-      );    
+      //viewButton.addActionListener(
+      ///   new ActionListener() {
+      //  	new DepositFrame().updateDisplay();
+      //     
+      //       // end method actionPerformed
+      //   }
+      //);    
 	      	      	      	           
       // lay out controller components
       setLayout( new FlowLayout() );
