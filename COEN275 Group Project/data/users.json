@@ -1,1 +1,90 @@
-{"users":[{"password":"admin","card_number":774404,"balance":0.5199999999999996,"diet":{"low_cholesterol":true,"calorie_minimum":2000,"low_sodium":false,"vegan":true,"gluten_free":true,"calorie_maximum":2900},"history":[{"date":"May 30, 2016","amount":-0.0,"balance":1.5199999999999996,"total_calories":1800,"memo":"Vending Machine","type":"PURCHASE","items":[]},{"date":"May 31, 2016","amount":-0.0,"balance":1.5199999999999996,"total_calories":2100,"memo":"Vending Machine","type":"PURCHASE","items":[]},{"date":"Jun 1, 2016","amount":-0.0,"balance":1.5199999999999996,"total_calories":2000,"memo":"Vending Machine","type":"PURCHASE","items":[]},{"date":"Jun 2, 2016","amount":-0.0,"balance":1.5199999999999996,"total_calories":2400,"memo":"Vending Machine","type":"PURCHASE","items":[]},{"date":"Jun 3, 2016","amount":-0.0,"balance":1.5199999999999996,"total_calories":2600,"memo":"Vending Machine","type":"PURCHASE","items":[]},{"date":"Jun 4, 2016","amount":-0.0,"balance":1.5199999999999996,"total_calories":2200,"memo":"Vending Machine","type":"PURCHASE","items":[]},{"date":"Jun 5, 2016","amount":-0.0,"balance":0.5199999999999996,"total_calories":1900,"memo":"Cafe Ole","type":"PURCHASE","items":[]}]}]}
+{
+  "users": [
+    {
+      "password": "admin",
+      "card_number": 774404,
+      "balance": 0.50,
+      "diet": {
+        "low_cholesterol": true,
+        "calorie_minimum": 2000,
+        "low_sodium": false,
+        "vegan": true,
+        "gluten_free": true,
+        "calorie_maximum": 2900
+      },
+      "history": [
+        {
+          "date":"May 30, 2016",
+          "amount":50.00,
+          "type":"DEPOSIT",
+          "memo":"Deposit",
+          "balance":50.00
+
+        }
+        {
+          "date": "May 30, 2016",
+          "amount": 0,
+          "balance": 40.00,
+          "total_calories": 1800,
+          "memo": "Vending Machine",
+          "type": "PURCHASE",
+          "items": []
+        },
+        {
+          "date": "May 31, 2016",
+          "amount": 0,
+          "balance": 32.00,
+          "total_calories": 2100,
+          "memo": "Vending Machine",
+          "type": "PURCHASE",
+          "items": []
+        },
+        {
+          "date": "Jun 1, 2016",
+          "amount": 0,
+          "balance": 16.00,
+          "total_calories": 2000,
+          "memo": "Vending Machine",
+          "type": "PURCHASE",
+          "items": []
+        },
+        {
+          "date": "Jun 2, 2016",
+          "amount": 0,
+          "balance": 8.00,
+          "total_calories": 2400,
+          "memo": "Vending Machine",
+          "type": "PURCHASE",
+          "items": []
+        },
+        {
+          "date": "Jun 3, 2016",
+          "amount": 0,
+          "balance": 5.00,
+          "total_calories": 2600,
+          "memo": "Vending Machine",
+          "type": "PURCHASE",
+          "items": []
+        },
+        {
+          "date": "Jun 4, 2016",
+          "amount": 0,
+          "balance": 3.00,
+          "total_calories": 2200,
+          "memo": "Vending Machine",
+          "type": "PURCHASE",
+          "items": []
+        },
+        {
+          "date": "Jun 5, 2016",
+          "amount": 0,
+          "balance": 0.50,
+          "total_calories": 1900,
+          "memo": "Cafe Ole",
+          "type": "PURCHASE",
+          "items": []
+        }
+      ]
+    }
+  ]
+}

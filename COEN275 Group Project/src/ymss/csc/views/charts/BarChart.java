@@ -33,8 +33,11 @@ public class BarChart extends JPanel {
 	private Color colorOutOfRange = Color.RED;
 
 	private List<DataEntry> data = new ArrayList<DataEntry>();
+	private List<DataEntry> zoneLines = new ArrayList<DataEntry>();
 
 	private String chartTitle = "New Chart";
+
+	private Boolean goalEnabled = true;
 
 	public BarChart() {
 	}
@@ -63,6 +66,10 @@ public class BarChart extends JPanel {
 		this.rangeMax = rangeMax;
 	}
 
+	public void setGoalEnabled(Boolean enabled) {
+		this.goalEnabled = enabled;
+	}
+
 	/*
 	 * public void setData(List<Double> data){ this.data = data; this.nEntries =
 	 * data.size(); }
@@ -76,6 +83,10 @@ public class BarChart extends JPanel {
 	public void addDatum(String caption, Double value) {
 		this.data.add(new DataEntry(caption, value));
 		nEntries = nEntries + 1;
+	}
+	
+	public void addZoneLine(String caption, Double value){
+		this.zoneLines.add(new DataEntry(caption, value));
 	}
 
 	private class DataEntry {
@@ -109,6 +120,28 @@ public class BarChart extends JPanel {
 
 	private static final Font CHART_TITLE_FONT = new Font("Takoma", Font.BOLD, 16);
 	private static final Font CHART_NORMAL_FONT = new Font("Takoma", Font.PLAIN, 12);
+	
+	private void drawHorzLine(Graphics2D g2, Integer chartHeight, Integer chartWidth,Double barScaleY, Double value, String caption){
+		
+		Double y = chartHeight - BAR_FLOOR_OFFSET - barScaleY * value;
+		
+		// line
+		Line2D line = new Line2D.Double(0.0, y, chartWidth,y);
+		
+		float dash1[] = { 10.0f };
+		g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f));
+		g2.draw(line);
+
+		// label
+		g2.drawString(caption, 5,
+				Math.round(y) - 5);
+	}
+
+	private void drawZoneLines(Graphics2D g2, Integer chartHeight, Integer chartWidth,Double barScaleY) {
+
+		drawHorzLine(g2,chartHeight,chartWidth,barScaleY,this.rangeMin,rangeMin.toString());
+		drawHorzLine(g2,chartHeight,chartWidth,barScaleY,this.rangeMax,rangeMax.toString());
+	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -129,20 +162,16 @@ public class BarChart extends JPanel {
 		this.drawCenteredString(g2, chartTitle, new Rectangle(0, 0, chartWidth, 20), CHART_TITLE_FONT);
 		g2.setFont(CHART_NORMAL_FONT);
 
-		// zone lines
-		Line2D minLine = new Line2D.Double(0.0, chartHeight - BAR_FLOOR_OFFSET - barScaleY * this.rangeMin, chartWidth,
-				chartHeight - BAR_FLOOR_OFFSET - barScaleY * this.rangeMin);
-		Line2D maxLine = new Line2D.Double(0.0, chartHeight - BAR_FLOOR_OFFSET - barScaleY * this.rangeMax, chartWidth,
-				chartHeight - BAR_FLOOR_OFFSET - barScaleY * this.rangeMax);
-
-		float dash1[] = { 10.0f };
-		g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f));
-		g2.draw(minLine);
-		g2.draw(maxLine);
-
-		// zone labels
-		g2.drawString(rangeMin.toString(), 5, Math.round(chartHeight - BAR_FLOOR_OFFSET - barScaleY * this.rangeMin) - 5);
-		g2.drawString(rangeMax.toString(), 5, Math.round(chartHeight - BAR_FLOOR_OFFSET - barScaleY * this.rangeMax) - 5);
+		// zone lines & labels
+		if (this.goalEnabled)
+			this.drawZoneLines(g2, chartHeight, chartWidth,barScaleY);
+		
+		if(this.zoneLines.size() > 0){
+			for(int i = 0; i < zoneLines.size(); i++){
+				DataEntry de = zoneLines.get(i);
+				this.drawHorzLine(g2, chartHeight, chartWidth, barScaleY,de.value,de.caption);
+			}
+		}
 
 		g2.setStroke(new BasicStroke(1.0f));
 
@@ -163,12 +192,12 @@ public class BarChart extends JPanel {
 
 			int height = (int) Math.round(barScaleY * val);
 
-			if (val >= rangeMin && val <= rangeMax) {
+			if (!this.goalEnabled || (val >= rangeMin && val <= rangeMax)) {
 				g.setColor(this.colorInRange);
 			} else {
 				g.setColor(this.colorOutOfRange);
 			}
-			g.fillRect(x,chartHeight - BAR_FLOOR_OFFSET - height, width, height);
+			g.fillRect(x, chartHeight - BAR_FLOOR_OFFSET - height, width, height);
 			g.setColor(Color.black);
 			g.drawRect(x, chartHeight - BAR_FLOOR_OFFSET - height, width, height);
 

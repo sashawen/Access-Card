@@ -193,8 +193,18 @@ public class HealthFrame extends JFrame implements Observer {
 		});
 		initPreferencesList(null);
 
+		addChart(tempPanel);
+
+		user.addObserver(this);
+		redraw(user);
+
+		// pack();
+
+	}
+	
+	private void addChart(JPanel parent){
 		pnlChart = new JPanel();
-		tempPanel.add(pnlChart);
+		parent.add(pnlChart);
 
 		pnlChart.setLayout(new BorderLayout());
 
@@ -215,12 +225,6 @@ public class HealthFrame extends JFrame implements Observer {
 		}
 
 		pnlChart.add(chart, BorderLayout.CENTER);
-
-		user.addObserver(this);
-		redraw(user);
-
-		// pack();
-
 	}
 
 	private void redraw(UserAccount user) {
