@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"users":[{"password":"admin","card_number":774404,"balance":1.5199999999999996,"diet":{"low_cholesterol":true,"calorie_minimum":2900,"low_sodium":true,"vegan":true,"gluten_free":true,"calorie_maximum":2900},"history":[{"date":"Jun 4, 2016","amount":-1.0,"balance":1.5199999999999996,"memo":"Vending Machine","type":"PURCHASE","items":[1]}]}]}
+=======
+{"users":[{"password":"admin","card_number":774404,"balance":1.5199999999999996,"diet":{"low_cholesterol":true,"calorie_minimum":2200,"low_sodium":false,"vegan":true,"gluten_free":true,"calorie_maximum":2900},"history":[{"date":"Jun 4, 2016","amount":-1.0,"balance":1.5199999999999996,"memo":"Vending Machine","type":"PURCHASE","items":[1]}]}]}
+>>>>>>> origin/master

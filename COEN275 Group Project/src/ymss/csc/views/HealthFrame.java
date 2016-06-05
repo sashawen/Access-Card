@@ -20,10 +20,14 @@ import javax.swing.JPanel;
 
 import ymss.csc.models.DietaryProfile;
 import ymss.csc.models.UserAccount;
+import ymss.csc.views.charts.BarChart;
+
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Font;
 import java.awt.Component;
+import java.awt.Dimension;
+
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextPane;
@@ -54,19 +58,25 @@ public class HealthFrame extends JFrame implements Observer {
 	private JPanel panel_2;
 	private JPanel pnlButton;
 
+	private static final Color COLOR_LIGHTGRAY = new Color(224, 224, 224);
+	private static final Color COLOR_INRANGE = new Color(23, 106, 130);
+	private static final Color COLOR_OUTRANGE = new Color(255, 68, 35);
+
+	private BarChart chart;
+	
 	public HealthFrame(UserAccount user) {
 		this.user = user;
 
 		// Window initialization
 		setTitle(title);
-		// setSize(800, 600);
+		setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		JPanel tempPanel = new JPanel();
-		tempPanel.setBackground(Color.PINK);
+		tempPanel.setBackground(this.COLOR_LIGHTGRAY);
 		this.getContentPane().add(tempPanel, BorderLayout.CENTER);
-		tempPanel.setLayout(new BoxLayout(tempPanel, BoxLayout.Y_AXIS));
+		tempPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
 		pnlSummary = new JPanel();
 		tempPanel.add(pnlSummary);
@@ -126,18 +136,40 @@ public class HealthFrame extends JFrame implements Observer {
 		initPreferencesList(null);
 
 		pnlChart = new JPanel();
-		pnlChart.setBackground(Color.CYAN);
 		tempPanel.add(pnlChart);
+
+		pnlChart.setLayout(new BorderLayout());
+
+		chart = new BarChart();
+		chart.setCeiling(3000.0);
+		chart.setColorInRange(COLOR_INRANGE);
+		chart.setColorOutOfRange(COLOR_OUTRANGE);
+		chart.setChartTitle("Daily Caloric Intake");
+		chart.setRangeMin((double) user.getDiet().getCalorieMinimum());
+		chart.setRangeMax((double) user.getDiet().getCalorieMaximum());
+		
+		chart.clear();
+		chart.addDatum("5/27", 1800.0);
+		chart.addDatum("5/28", 2000.0);
+		chart.addDatum("5/29", 2500.0);
+		chart.addDatum("5/30", 2200.0);
+		chart.addDatum("5/31", 1900.0);
+		chart.addDatum("6/1", 2600.0);
+		chart.addDatum("6/2", 2400.0);
+
+		pnlChart.add(chart, BorderLayout.CENTER);
 
 		user.addObserver(this);
 		redraw(user);
 
-		pack();
+		// pack();
 
 	}
 
 	private void redraw(UserAccount user) {
 		initialize(user.getDiet());
+		chart.setRangeMin((double)user.getDiet().getCalorieMinimum());
+		chart.setRangeMax((double)user.getDiet().getCalorieMaximum());
 		repaint();
 		revalidate();
 	}
