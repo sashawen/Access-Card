@@ -40,15 +40,6 @@
           "items": []
         },
         {
-          "date": "Jun 1, 2016",
-          "amount": 0,
-          "balance": 16.00,
-          "total_calories": 2000,
-          "memo": "Vending Machine",
-          "type": "PURCHASE",
-          "items": []
-        },
-        {
           "date": "Jun 2, 2016",
           "amount": 0,
           "balance": 8.00,

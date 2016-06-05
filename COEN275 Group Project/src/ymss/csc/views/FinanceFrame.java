@@ -22,6 +22,7 @@ import ymss.csc.models.AccountTransaction;
 import ymss.csc.models.Order;
 import ymss.csc.models.UserAccount;
 import ymss.csc.views.charts.BarChart;
+import ymss.csc.views.charts.LineChart;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -107,17 +108,28 @@ public class FinanceFrame extends JFrame implements Observer {
 		tempPanel.add(tabbedPane);
 
 		JPanel pnlChart = new JPanel();
-		tabbedPane.addTab("Chart", null, pnlChart, null);
+		tabbedPane.addTab("Daily Expenditures - Bar", null, pnlChart, null);
 		pnlChart.setBorder(new LineBorder(new Color(0, 0, 0)));
 
-		addChart(pnlChart);
+		addBarChart(pnlChart);
 		
-		pnlHistory = new JPanel();
-		tabbedPane.addTab("History", null, pnlHistory, null);
+		JPanel pnlChart2 = new JPanel();
+		tabbedPane.addTab("Daily Expenditures - Line", null, pnlChart2, null);
+		pnlChart2.setBorder(new LineBorder(new Color(0, 0, 0)));
+		addLineChart(pnlChart2);
+
+		
+		JPanel pnlChart3 = new JPanel();
+		tabbedPane.addTab("Account Balance Over Time", null, pnlChart3, null);
+		pnlChart3.setBorder(new LineBorder(new Color(0, 0, 0)));
+		addLineChart2(pnlChart3);
 	}
-	
-	private JPanel pnlChart;
+
+	//private JPanel pnlChart;
 	private BarChart chart;
+	//private JPanel pnlChart1;
+	private LineChart chart1;
+	private LineChart chart2;
 
 	private static final Color COLOR_LIGHTGRAY = new Color(224, 224, 224);
 	private static final Color COLOR_INRANGE = new Color(23, 106, 130);
@@ -168,14 +180,11 @@ public class FinanceFrame extends JFrame implements Observer {
 		return exps;
 	}
 	
-	private void addChart(JPanel parent){
-		pnlChart = new JPanel();
+	private void addBarChart(JPanel parent){
 		parent.setLayout(new BorderLayout());
-		parent.add(pnlChart,BorderLayout.CENTER);
-
-		pnlChart.setLayout(new BorderLayout());
 
 		chart = new BarChart();
+		parent.add(chart,BorderLayout.CENTER);
 
 		chart.clear();
 		
@@ -203,9 +212,113 @@ public class FinanceFrame extends JFrame implements Observer {
 		chart.setColorOutOfRange(COLOR_OUTRANGE);
 		chart.setChartTitle("Daily Expenditure");
 		chart.setGoalEnabled(false);
+	}
+	
+	private void addLineChart(JPanel parent){
+		parent.setLayout(new BorderLayout());
 
+		chart1 = new LineChart();
+		parent.add(chart1,BorderLayout.CENTER);
 
-		pnlChart.add(chart, BorderLayout.CENTER);
+		chart1.clear();
+		
+		List<String> captions = getPastWeekCaptions();
+		List<Double> values = this.getPastWeekExpenses(user);
+		for(int i = 0; i < captions.size(); i++){
+			chart1.addDatum(captions.get(i), values.get(i));
+		}
+		
+		Double max = 0.0;
+		for(int i = 0; i < values.size(); i++){
+			max = Math.max(max, values.get(i));
+		}
+		Double step = 5.0; String cap;
+		while(step < max){
+			cap = String.format("$%.2f", step);
+			chart1.addZoneLine(cap, step);
+			step = step + 5.0;
+		}
+		cap = String.format("$%.2f", step);
+		chart1.addZoneLine(cap, step);
+		
+		chart1.setCeiling(max+5.00);
+		chart1.setColorInRange(COLOR_INRANGE);
+		chart1.setColorOutOfRange(COLOR_OUTRANGE);
+		chart1.setChartTitle("Daily Expenditure");
+		chart1.setGoalEnabled(false);
+
+	}
+	
+	private Date getDateXDaysAgo(Date d,Integer daysAgo){
+		Calendar day = Calendar.getInstance();
+		day.setTime(d);
+		day.set(Calendar.DAY_OF_YEAR, day.get(Calendar.DAY_OF_YEAR) - daysAgo);
+		return day.getTime();
+	}
+	
+	private List<Double> getPastWeekBalances(UserAccount user){
+		List<Double> bals = new ArrayList<Double>();
+
+		Integer daysAgo = 6;
+		Date refDate = getDateXDaysAgo(new Date(),daysAgo);
+		Double balance = 0.0;
+		
+		Iterator<AccountTransaction> trans = user.getHistory().iterator();
+		if(!trans.hasNext()) return bals;
+		AccountTransaction t = trans.next();
+		while(true){
+			Date d = t.getDate();
+			if(d.before(refDate) || onSameDay(d,refDate)){
+				balance  = t.getBalance();
+				if(trans.hasNext()){
+					t = trans.next();
+				}else{
+					break;
+				}
+			}else if(d.after(refDate)){
+				bals.add(balance);
+				daysAgo = daysAgo - 1;
+				refDate = getDateXDaysAgo(new Date(),daysAgo);
+			}
+		}
+		bals.add(balance);
+		return bals;
+	}
+	
+	private void addLineChart2(JPanel parent){
+		parent.setLayout(new BorderLayout());
+
+		LineChart chart = new LineChart();
+		parent.add(chart,BorderLayout.CENTER);
+
+		chart.clear();
+		
+		List<String> captions = getPastWeekCaptions();
+		List<Double> values = this.getPastWeekBalances(user);
+		for(int i = 0; i < captions.size(); i++){
+			chart.addDatum(captions.get(i), values.get(i));
+		}
+		
+		Double max = 0.0;
+		for(int i = 0; i < values.size(); i++){
+			max = Math.max(max, values.get(i));
+		}
+		Double step = 5.0; String cap;
+		while(step < max){
+			cap = String.format("$%.2f", step);
+			chart.addZoneLine(cap, step);
+			step = step + 5.0;
+		}
+		cap = String.format("$%.2f", step);
+		chart.addZoneLine(cap, step);
+		
+		chart.setCeiling(max+5.00);
+		chart.setColorInRange(COLOR_INRANGE);
+		chart.setColorOutOfRange(COLOR_OUTRANGE);
+		chart.setChartTitle("Account Balance Over Time");
+		chart.setGoalEnabled(false);
+		
+		chart2 = chart;
 	}
 	
 	private Boolean onSameDay(Date a, Date b){
@@ -218,33 +331,9 @@ public class FinanceFrame extends JFrame implements Observer {
 		return sameDay;
 	}
 	
-	private void drawHistory(){
-		pnlHistory.removeAll();
-		
-		Iterator<AccountTransaction> it = user.getHistory().iterator();
-		while(it.hasNext()){
-			AccountTransaction trans = it.next();
-			
-			if(trans == null){
-				System.out.println("Something failed...");
-				continue;
-			}
-			
-			JLabel lblTrans = new JLabel();
-			String date = trans.getDateString();
-			String memo = trans.getMemo();
-			Double change = trans.getAccountChange();
-			Double balance = trans.getBalance();
-			String isToday = (onSameDay(new Date(),trans.getDate())) ? "(Today)" : "";
-			String strTrans = String.format("%s%s -- %s -- $%.2f -- $%.2f",date,isToday,memo,change,balance);
-			lblTrans.setText(strTrans);
-			pnlHistory.add(lblTrans);
-		}
-	}
-
 	public void redraw(UserAccount user) {
 		setBalance(user.getRemainingBalance());
-		drawHistory();
+		//drawHistory();
 	}
 
 	public void setBalance(Double balance) {
