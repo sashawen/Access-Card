@@ -2,6 +2,9 @@ package ymss.csc.views;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -13,10 +16,12 @@ import javax.swing.BoxLayout;
 import java.awt.Component;
 import javax.swing.border.LineBorder;
 
+import ymss.csc.models.AccountTransaction;
 import ymss.csc.models.UserAccount;
 
 import java.awt.Color;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JTabbedPane;
 
 public class FinanceFrame extends JFrame implements Observer {
 
@@ -30,6 +35,7 @@ public class FinanceFrame extends JFrame implements Observer {
 	private FundDepositFrame fundDepositFrame;
 
 	private UserAccount user;
+	private JPanel tempPanel;
 
 	public FinanceFrame(UserAccount user) {
 		this.user = user;
@@ -42,7 +48,7 @@ public class FinanceFrame extends JFrame implements Observer {
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-		JPanel tempPanel = new JPanel();
+		tempPanel = new JPanel();
 		this.getContentPane().add(tempPanel);
 		tempPanel.setLayout(new BoxLayout(tempPanel, BoxLayout.Y_AXIS));
 
@@ -85,22 +91,64 @@ public class FinanceFrame extends JFrame implements Observer {
 		});
 		pnlSummary.add(btnDeposit);
 	}
+	
+	private JPanel pnlHistory;
 
 	private void initChartPanel(JPanel parent) {
 		if (parent == null)
 			return;
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tempPanel.add(tabbedPane);
 
 		JPanel pnlChart = new JPanel();
+		tabbedPane.addTab("Chart", null, pnlChart, null);
 		pnlChart.setBorder(new LineBorder(new Color(0, 0, 0)));
 
 		JLabel lblChartTitle = new JLabel("Chart Goes Here");
 		pnlChart.add(lblChartTitle);
-
-		parent.add(pnlChart);
+		
+		pnlHistory = new JPanel();
+		tabbedPane.addTab("History", null, pnlHistory, null);
+	}
+	
+	private Boolean onSameDay(Date a, Date b){
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(a);
+		cal2.setTime(b);
+		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+		                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+		return sameDay;
+	}
+	
+	private void drawHistory(){
+		pnlHistory.removeAll();
+		
+		Iterator<AccountTransaction> it = user.getHistory().iterator();
+		while(it.hasNext()){
+			AccountTransaction trans = it.next();
+			
+			if(trans == null){
+				System.out.println("Something failed...");
+				continue;
+			}
+			
+			JLabel lblTrans = new JLabel();
+			String date = trans.getDateString();
+			String memo = trans.getMemo();
+			Double change = trans.getAccountChange();
+			Double balance = trans.getBalance();
+			String isToday = (onSameDay(new Date(),trans.getDate())) ? "(Today)" : "";
+			String strTrans = String.format("%s%s -- %s -- $%.2f -- $%.2f",date,isToday,memo,change,balance);
+			lblTrans.setText(strTrans);
+			pnlHistory.add(lblTrans);
+		}
 	}
 
 	public void redraw(UserAccount user) {
 		setBalance(user.getRemainingBalance());
+		drawHistory();
 	}
 
 	public void setBalance(Double balance) {

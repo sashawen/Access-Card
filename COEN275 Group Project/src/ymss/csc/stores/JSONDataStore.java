@@ -31,6 +31,7 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 	private static final String TRANSACTION_BALANCE = "balance";
 	private static final String TRANSACTION_DATE = "date";
 	private static final String TRANSACTION_MEMO = "memo";
+	private static final String TRANSACTION_TYPE = "type";
 	private static final String ORDER_ITEMS = "items";
 	private static final String DIET_CALORIEMINIMUM = "calorie_minimum";
 	private static final String DIET_CALORIEMAXIMUM = "calorie_maximum";
@@ -109,7 +110,36 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 	}
 
 	private JSONArray createOrderHistory(List<AccountTransaction> history) {
-		return new JSONArray();
+		JSONArray arr = new JSONArray();
+
+		Iterator<AccountTransaction> it = history.iterator();
+		while (it.hasNext()) {
+			arr.add(createOrderHistoryItem(it.next()));
+		}
+		return arr;
+	}
+	
+	
+	private JSONObject createOrderHistoryItem(AccountTransaction trans) {
+		JSONObject o = new JSONObject();
+		o.put(this.TRANSACTION_MEMO, trans.getMemo());
+		o.put(this.TRANSACTION_BALANCE, trans.getBalance());
+		o.put(this.TRANSACTION_DATE, stringifyDate(trans.getDate()));
+		o.put(this.TRANSACTION_AMOUNT, trans.getAccountChange());
+		if (trans instanceof Order) {
+
+			JSONArray arr = new JSONArray();
+			Iterator<FoodItem> it = ((Order) trans).getItems().iterator();
+			while (it.hasNext()) {
+				arr.add(it.next().getId());
+			}
+			o.put(this.ORDER_ITEMS, arr);
+			o.put(this.TRANSACTION_TYPE, Order.getType());
+
+		}else if(trans instanceof Deposit){
+			o.put(this.TRANSACTION_TYPE, Deposit.getType());
+		}
+		return o;
 	}
 
 	@Override
@@ -214,7 +244,7 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 	}
 
 	private AccountTransaction parseUserTransaction(JSONObject trans) {
-		String type = parseString(trans, "type", "NONE");
+		String type = parseString(trans, TRANSACTION_TYPE, "NONE");
 
 		if (type.equals(Order.getType())) {
 			return parseUserOrder(trans);

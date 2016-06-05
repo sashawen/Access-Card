@@ -7,4 +7,5 @@ public interface AccountTransaction {
 	public Double getAccountChange();
 	public Double getBalance();
 	public Date getDate();
+	public String getDateString();
 }

@@ -1,5 +1,6 @@
 package ymss.csc.models;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -208,6 +209,11 @@ public class Order extends Observable implements AccountTransaction{
 	@Override
 	public Date getDate() {
 		return purchaseDate;
+	}
+	
+	public String getDateString(){
+		DateFormat df = DateFormat.getDateInstance();
+		return df.format(purchaseDate);
 	}
 	
 	public static String getType(){

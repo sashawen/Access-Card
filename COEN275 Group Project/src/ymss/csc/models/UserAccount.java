@@ -20,6 +20,10 @@ public class UserAccount extends Observable{
 	}
 	
 	public void addTransaction(AccountTransaction t){
+		if(t == null){
+			System.out.println("Yeah... that's null.");
+			return;
+		}
 		history.add(t);
 		setChanged();
 		notifyObservers();

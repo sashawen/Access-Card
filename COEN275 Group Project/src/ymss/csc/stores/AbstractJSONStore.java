@@ -60,6 +60,11 @@ public abstract class AbstractJSONStore {
 		}
 	}
 
+	protected String stringifyDate(Date date) {
+		DateFormat df = DateFormat.getDateInstance();
+		return df.format(date);
+	}
+
 	public static void writeJSONToFile(JSONObject obj, String filename) {
 
 		try {
@@ -77,7 +82,7 @@ public abstract class AbstractJSONStore {
 			bw.flush();
 			bw.close();
 
-			//System.out.println("Done");
+			// System.out.println("Done");
 
 		} catch (IOException e) {
 			e.printStackTrace();

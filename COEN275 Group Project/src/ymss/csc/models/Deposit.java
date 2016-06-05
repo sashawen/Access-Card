@@ -1,5 +1,6 @@
 package ymss.csc.models;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 public class Deposit implements AccountTransaction {
@@ -37,8 +38,14 @@ public class Deposit implements AccountTransaction {
 		return date;
 	}
 	
+	public String getDateString(){
+		DateFormat df = DateFormat.getDateInstance();
+		return df.format(date);
+	}
+	
 	public static String getType(){
 		return type;
 	}
+	
 	
 }
