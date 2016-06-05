@@ -57,11 +57,13 @@ public class HealthFrame extends JFrame implements Observer {
 	private JPanel pnlPreferences;
 	private JPanel panel_2;
 	private JPanel pnlButton;
-	
-	private static final Color COLOR_LIGHTGRAY = new Color(224,224,224);
-	private static final Color COLOR_INRANGE = new Color(23,106,130);
-	private static final Color COLOR_OUTRANGE = new Color(255,68,35);
 
+	private static final Color COLOR_LIGHTGRAY = new Color(224, 224, 224);
+	private static final Color COLOR_INRANGE = new Color(23, 106, 130);
+	private static final Color COLOR_OUTRANGE = new Color(255, 68, 35);
+
+	private BarChart chart;
+	
 	public HealthFrame(UserAccount user) {
 		this.user = user;
 
@@ -137,34 +139,37 @@ public class HealthFrame extends JFrame implements Observer {
 		tempPanel.add(pnlChart);
 
 		pnlChart.setLayout(new BorderLayout());
-		
-		
-		BarChart chart = new BarChart();
+
+		chart = new BarChart();
 		chart.setCeiling(3000.0);
 		chart.setColorInRange(COLOR_INRANGE);
 		chart.setColorOutOfRange(COLOR_OUTRANGE);
+		chart.setChartTitle("Daily Caloric Intake");
+		chart.setRangeMin((double) user.getDiet().getCalorieMinimum());
+		chart.setRangeMax((double) user.getDiet().getCalorieMaximum());
 		
-		List<Double> d = new ArrayList<Double>();
-		d.add(1800.0);
-		d.add(2000.0);
-		d.add(2500.0);
-		d.add(2200.0);
-		d.add(1900.0);
-		d.add(2600.0);
-		d.add(2400.0);
-		
-		chart.setData(d);
+		chart.clear();
+		chart.addDatum("5/27", 1800.0);
+		chart.addDatum("5/28", 2000.0);
+		chart.addDatum("5/29", 2500.0);
+		chart.addDatum("5/30", 2200.0);
+		chart.addDatum("5/31", 1900.0);
+		chart.addDatum("6/1", 2600.0);
+		chart.addDatum("6/2", 2400.0);
+
 		pnlChart.add(chart, BorderLayout.CENTER);
-		
+
 		user.addObserver(this);
 		redraw(user);
 
-		//pack();
+		// pack();
 
 	}
 
 	private void redraw(UserAccount user) {
 		initialize(user.getDiet());
+		chart.setRangeMin((double)user.getDiet().getCalorieMinimum());
+		chart.setRangeMax((double)user.getDiet().getCalorieMaximum());
 		repaint();
 		revalidate();
 	}
