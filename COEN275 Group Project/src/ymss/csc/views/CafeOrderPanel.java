@@ -1,16 +1,22 @@
 package ymss.csc.views;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 
 import ymss.csc.models.AbstractVendor;
 import ymss.csc.models.Cafe;
@@ -27,6 +33,10 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 
 	private Order order;
 	private OrderPanel pnlOrder;
+	
+	//add
+	private JScrollPane menu;
+	//
 
 	public CafeOrderPanel(AbstractVendor vendor, UserAccount user) {
 		super(vendor, user);
@@ -37,6 +47,7 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 
 		JPanel pnlBalance = new JPanel();
 		lblBalance = new JLabel("Remaining Balance:");
+		lblBalance.setFont(new Font("Lucida Grande", Font.BOLD, 16));
 		pnlBalance.add(lblBalance);
 		add(pnlBalance, BorderLayout.NORTH);
 
@@ -54,7 +65,58 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 		menuPanel.setLayout(new GridBagLayout());
 
 		add(menuPanel, BorderLayout.CENTER);
-
+		//add
+		menu = new JScrollPane(menuPanel);
+		menu.setBounds(6, 95, 463, 425);
+		add(menu, BorderLayout.CENTER);
+		menu.setViewportView(menuPanel);
+		menu.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		menu.setVisible(true);
+		//
+		
+		//#########XH
+//		 JRadioButton form[][] = new JRadioButton[12][5];
+//		 String counts[] = { "", "0-1", "2-5", "6-10", "11-100", "101+" };
+//		 String categories[] = { "testing,,,,,,,", "Office", "Extended Family",
+//		        "Company (US)", "Company (World)", "Team", "Will",
+//		        "Birthday Card List", "High School", "Country", "Continent",
+//		        "Planet"};
+		 //JPanel p = new JPanel();
+//		 menuPanel.setSize(300, 100);
+//		 menuPanel.setLayout(new GridLayout(13, 6, 10, 0));
+//		 for (int row = 0; row < 13; row++) {
+//		      ButtonGroup bg = new ButtonGroup();
+//		      for (int col = 0; col < 6; col++) {
+//		        if (row == 0) {
+//		        	menuPanel.add(new JLabel(counts[col]));
+//		        } else {
+//		          if (col == 0) {
+//		        	  menuPanel.add(new JLabel(categories[row - 1]));
+//		          } else {
+//		            form[row - 1][col - 1] = new JRadioButton();
+//		            bg.add(form[row - 1][col - 1]);
+//		            menuPanel.add(form[row - 1][col - 1]);
+//		          }
+//		        }
+//		      }
+//		    }
+//		 
+//		 	TextArea test = new TextArea();
+//		 	test.setText("test.............................");
+//		 	
+//		 	for (int i = 0; i < 10; i++){
+//		 		menuPanel.add(test);
+//		 	}
+//		 	
+//		    menu = new JScrollPane(menuPanel);
+//		    menu.setBounds(6, 95, 463, 425);
+//		   add(menu, BorderLayout.CENTER);
+//		   menu.setViewportView(menuPanel);
+//		   menu.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//			menu.setVisible(true);
+		
+		
+		//#########XH
 		redraw();
 	}
 
