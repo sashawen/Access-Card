@@ -68,6 +68,12 @@ public class HealthFrame extends JFrame implements Observer {
 	private static final Color COLOR_OUTRANGE = new Color(255, 68, 35);
 
 	private BarChart chart;
+	private JPanel pnlCalConsumed;
+	private JLabel lblCaloriesConsumed;
+	private JLabel lblCalConsumed;
+	private JPanel pnlCalRemaining;
+	private JLabel lblCaloriesRemaining;
+	private JLabel lblCalRemaining;
 
 	private List<String> getPastWeekCaptions(){
 		
@@ -136,6 +142,32 @@ public class HealthFrame extends JFrame implements Observer {
 		lblCalories = new JLabel("1200 - 3500");
 		lblCalories.setVerticalAlignment(SwingConstants.TOP);
 		pnlCalories.add(lblCalories);
+		
+		pnlCalConsumed = new JPanel();
+		pnlCalConsumed.setBorder(new EmptyBorder(10, 10, 10, 10));
+		pnlSummary.add(pnlCalConsumed);
+		pnlCalConsumed.setLayout(new GridLayout(0, 2, 40, 0));
+		
+		lblCaloriesConsumed = new JLabel("Calories Consumed:");
+		lblCaloriesConsumed.setVerticalAlignment(SwingConstants.TOP);
+		pnlCalConsumed.add(lblCaloriesConsumed);
+		
+		lblCalConsumed = new JLabel("0 - 0");
+		lblCalConsumed.setVerticalAlignment(SwingConstants.TOP);
+		pnlCalConsumed.add(lblCalConsumed);
+		
+		pnlCalRemaining = new JPanel();
+		pnlCalRemaining.setBorder(new EmptyBorder(10, 10, 10, 10));
+		pnlSummary.add(pnlCalRemaining);
+		pnlCalRemaining.setLayout(new GridLayout(0, 2, 40, 0));
+		
+		lblCaloriesRemaining = new JLabel("Calories Remaining: ");
+		lblCaloriesRemaining.setVerticalAlignment(SwingConstants.TOP);
+		pnlCalRemaining.add(lblCaloriesRemaining);
+		
+		lblCalRemaining = new JLabel("0 - 0");
+		lblCalRemaining.setVerticalAlignment(SwingConstants.TOP);
+		pnlCalRemaining.add(lblCalRemaining);
 
 		pnlPreferences = new JPanel();
 		pnlPreferences.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -215,7 +247,18 @@ public class HealthFrame extends JFrame implements Observer {
 	}
 
 	public void initialize(DietaryProfile diet) {
-		setCaloricRange(diet.getCalorieMinimum(), diet.getCalorieMaximum());
+		Integer calMin = diet.getCalorieMinimum();
+		Integer calMax = diet.getCalorieMaximum();
+		lblCalories.setText(calMin + " - " + calMax);
+		
+		Integer calConsumed = user.getCaloriesConsumed(new Date());
+		lblCalConsumed.setText(calConsumed.toString());
+		
+		Integer cMinRem = calMin - calConsumed;
+		Integer cMaxRem = calMax - calConsumed;
+		
+		lblCalRemaining.setText(cMinRem + " - " + cMaxRem);		
+		
 		List<String> preferences = new ArrayList<String>();
 
 		if (diet.isLowSodium())
@@ -253,8 +296,5 @@ public class HealthFrame extends JFrame implements Observer {
 		btnEdit.removeActionListener(l);
 	}
 
-	private void setCaloricRange(Integer min, Integer max) {
-		lblCalories.setText(min + " - " + max);
-	}
 
 }
