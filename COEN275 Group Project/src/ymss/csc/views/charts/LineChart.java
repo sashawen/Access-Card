@@ -158,8 +158,10 @@ public class LineChart extends JPanel {
 		Integer chartWidth = getWidth();// this.getPreferredSize().width;
 		Integer chartHeight = getHeight();// this.getPreferredSize().height;
 
+		Integer n = (nEntries > 0) ? nEntries : 1;
+		
 		// Determine scale.
-		Integer barWidth = (chartWidth - 2 * OUTER_MARGIN - INNERBAR_MARGIN) / (nEntries) - INNERBAR_MARGIN;
+		Integer barWidth = (chartWidth - 2 * OUTER_MARGIN - INNERBAR_MARGIN) / (n) - INNERBAR_MARGIN;
 		Double barScaleY = (chartHeight.doubleValue() - BAR_FLOOR_OFFSET - BAR_CEILING_OFFSET) / ceiling;
 
 		// title

@@ -37,6 +37,7 @@ public class FinanceFrame extends JFrame implements Observer {
 
 	private JButton btnDeposit;
 	private JLabel lblCurrentBalance;
+	private JLabel lblDailySpent;
 
 	private FundDepositFrame fundDepositFrame;
 
@@ -104,6 +105,19 @@ public class FinanceFrame extends JFrame implements Observer {
 			}
 		});
 		pnlSummary.add(btnDeposit);
+		
+		JPanel pnlDailySpent = new JPanel();
+		pnlDailySpent.setBorder(new EmptyBorder(10, 10, 10, 10));
+		pnlSummary.add(pnlDailySpent);
+		pnlDailySpent.setLayout(new BoxLayout(pnlDailySpent, BoxLayout.X_AXIS));
+
+		JLabel lblDailySpentPrefix = new JLabel("Current Amount Spent Today: ");
+		pnlDailySpent.add(lblDailySpentPrefix);
+
+		lblDailySpent = new JLabel("$0.00");
+		pnlDailySpent.add(lblDailySpent);
+
+		
 	}
 
 	private void initChartPanel(JPanel parent) {
@@ -316,15 +330,21 @@ public class FinanceFrame extends JFrame implements Observer {
 	}
 	
 	public void redraw(UserAccount user) {
-		setBalance(user.getRemainingBalance());
-	}
+		Double balance = user.getRemainingBalance();
 
-	public void setBalance(Double balance) {
 		String strBalance = String.format("$%.2f", balance);
 		lblCurrentBalance.setText(strBalance);
 
-		lblCurrentBalance.repaint();
-		lblCurrentBalance.revalidate();
+		Double spent = user.getTotalExpenses(new Date());
+
+		String strSpent = String.format("$%.2f", spent);
+		lblDailySpent.setText(strSpent);
+		
+		repaint();
+		revalidate();
+	}
+
+	public void setBalance(Double balance) {
 	}
 
 	@Override
