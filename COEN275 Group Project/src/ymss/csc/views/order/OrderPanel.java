@@ -12,8 +12,16 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import ymss.csc.application.Constants;
 import ymss.csc.models.FoodItem;
 import ymss.csc.models.Order;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class OrderPanel extends JPanel implements Observer {
 
@@ -22,25 +30,34 @@ public class OrderPanel extends JPanel implements Observer {
 	private JButton btnPurchase;
 	private JPanel pnlItems;
 	private JLabel lblTotal;
+	private JPanel panel;
 
 	public OrderPanel(Order order) {
+		setBorder(new EmptyBorder(10, 5, 10, 5));
 		this.order = order;
 		order.addObserver(this);
-
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout(0, 0));
 
 		JLabel lblHeader = new JLabel("Order");
-		this.add(lblHeader);
+		lblHeader.setFont(Constants.FONT_HEADING_4);
+		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		this.add(lblHeader, BorderLayout.NORTH);
 
 		pnlItems = new JPanel();
-		pnlItems.setLayout(new BoxLayout(pnlItems, BoxLayout.Y_AXIS));
+		pnlItems.setLayout(new GridBagLayout());
 		this.add(pnlItems);
 
-		lblTotal = new JLabel("");
-		this.add(lblTotal);
+		panel = new JPanel();
+		add(panel, BorderLayout.SOUTH);
+		panel.setLayout(new GridLayout(0, 1, 0, 0));
+
+		String strTotal = String.format("$%.2f", order.getTotalCost());
+		lblTotal = new JLabel(strTotal);
+		lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblTotal);
 
 		btnPurchase = new JButton("Purchase");
-		this.add(btnPurchase);
+		panel.add(btnPurchase);
 
 	}
 
@@ -52,7 +69,7 @@ public class OrderPanel extends JPanel implements Observer {
 		// observe new order
 		this.order = order;
 		order.addObserver(this);
-		
+
 		redraw();
 	}
 
@@ -68,6 +85,13 @@ public class OrderPanel extends JPanel implements Observer {
 			}
 
 		}
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.SOUTH;
+		gc.gridx = 0;
+		gc.gridy = GridBagConstraints.RELATIVE;
+		gc.weighty = 1.0;
+		pnlItems.add(new JPanel(), gc);
 	}
 
 	private void redrawTotal() {
@@ -91,39 +115,12 @@ public class OrderPanel extends JPanel implements Observer {
 	}
 
 	private void addOrderLine(JPanel parent, FoodItem item, Integer quantity) {
-
-		JPanel pnlLine = new JPanel();
-		pnlLine.setLayout(new BoxLayout(pnlLine, BoxLayout.X_AXIS));
-
-		JLabel lblName = new JLabel(item.getName());
-		pnlLine.add(lblName);
-
-		JLabel lblPrice = new JLabel("$" + item.getPrice());
-		pnlLine.add(lblPrice);
-
-		JLabel lblQuantity = new JLabel("x " + quantity);
-		pnlLine.add(lblQuantity);
-
-		JLabel lblItemTotal = new JLabel("=> " + item.getPrice() * quantity);
-		pnlLine.add(lblItemTotal);
-
-		JButton btnAdd = new JButton("+");
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				order.addItemToOrder(item);
-			}
-		});
-		pnlLine.add(btnAdd);
-
-		JButton btnRemove = new JButton("-");
-		btnRemove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				order.removeItemFromOrder(item);
-			}
-		});
-		pnlLine.add(btnRemove);
-
-		parent.add(pnlLine);
+		GridBagConstraints cs = new GridBagConstraints();
+		cs.gridx = 0;
+		cs.fill = GridBagConstraints.HORIZONTAL;
+		cs.weightx = 1.0;
+		cs.anchor = GridBagConstraints.NORTH;
+		parent.add(new OrderItemPanel(order,item,quantity),cs);
 
 		return;
 	}
