@@ -101,7 +101,7 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 		tempPanel.add(scrollPane, BorderLayout.CENTER);
 		tempPanel.setBackground(Color.pink);
 
-		pnlOrder = new OrderPanel(this.order);
+		pnlOrder = new OrderPanel(this.order,user);
 		tempPanel.addComponentListener(new ComponentListener() {
 
 			@Override

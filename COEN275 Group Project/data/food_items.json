@@ -10,11 +10,10 @@
 			"low_cholesterol":false,
 			"gluten_free": false,
 			"vegan": false
-		},
-		{
+		},{
 			"id":1,
-			"name":"Potato Chips",
-			"description":"Salty, Crunchy.  Pretty normal.",
+			"name":"Fries",
+			"description":"Salty, Crunchy, Pretty normal.",
 			"calories":200,
 			"price":2.50,
 			"low_sodium":false,
@@ -23,7 +22,7 @@
 			"vegan": false
 		},{
 			"id":2,
-			"name":"BBQ Potato Chips",
+			"name":"BBQ Chips",
 			"description":"Mesquite barbeque taste that the obese love.",
 			"calories":250,
 			"price":2.50,
@@ -34,7 +33,17 @@
 		},{
 			"id":3,
 			"name":"Dried Seaweed",
-			"description":"\"Taste of the Sea\", whatever that means.",
+			"description":"Organic Seaweeed, Organic Extra Virgin Olive Oil, Sea Salt.",
+			"calories":100,
+			"price":1.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": true,
+			"vegan": true
+		},{
+			"id":4,
+			"name":"Wet Seaweed",
+			"description":"\"Taste of the Sea\".",
 			"calories":100,
 			"price":1.75,
 			"low_sodium":false,
@@ -42,15 +51,145 @@
 			"gluten_free": true,
 			"vegan": true
 		},{
-			"id":4,
-			"name":"Wet Seaweed",
-			"description":"\"Taste of the Sea\", whatever that means.",
+			"id":5,
+			"name":" Regular Coke",
+			"description":"\"Brand of Coca-Cola\".",
+			"calories":100,
+			"price":1.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":6,
+			"name":"Orange Juice",
+			"description":"Made from fresh organic California Oranges.",
 			"calories":100,
 			"price":1.75,
 			"low_sodium":false,
 			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":7,
+			"name":"Hot Dog",
+			"description":"Tranditional made.",
+			"calories":200,
+			"price":2.75,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":8,
+			"name":"Cheeseburger",
+			"description":"A hamburger topped with cheese.",
+			"calories":150,
+			"price":4.75,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":9,
+			"name":"Beef Burger",
+			"description":"All or any of the following to serve: sliced tomato, beetroot, horseradish sauce, mayonnaise.",
+			"calories":220,
+			"price":5.75,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":10,
+			"name":"Homemade Sandwich",
+			"description":"\"Taste of Homemade\", fresh vegetables, egg and bacon.",
+			"calories":150,
+			"price":3.75,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":11,
+			"name":"Garden Green Combo",
+			"description":"Green Leaf, Chorizo, and Apple Salad.",
+			"calories":100,
+			"price":3.25,
+			"low_sodium":false,
+			"low_cholesterol":false,
 			"gluten_free": true,
 			"vegan": true
+		},{
+			"id":12,
+			"name":"Strawberry Ice Cream",
+			"description":"Taste of real Strawberry.",
+			"calories":180,
+			"price":2.55,
+			"low_sodium":false,
+			"low_cholesterol":false,
+			"gluten_free": true,
+			"vegan": true
+		},{
+			"id":13,
+			"name":"Diet Coke",
+			"description":"\"Brand of Coca-Cola\".",
+			"calories":100,
+			"price":1.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":14,
+			"name":"Ice Tea",
+			"description":"\"Brand of Coca-Cola\".",
+			"calories":100,
+			"price":1.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":15,
+			"name":"Sprite",
+			"description":"colorless, lemon and lime flavored, caffeine-free soft drink.",
+			"calories":100,
+			"price":1.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":16,
+			"name":"Classic Chips",
+			"description":"\"Brand of Lay's\".",
+			"calories":100,
+			"price":1.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":17,
+			"name":"BBQ Chips",
+			"description":"\"Brand of Lay's\".",
+			"calories":100,
+			"price":1.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
+		},{
+			"id":18,
+			"name":"Dove Chocolate",
+			"description":"\"Milk Chocolate\".",
+			"calories":200,
+			"price":2.75,
+			"low_sodium":true,
+			"low_cholesterol":false,
+			"gluten_free": false,
+			"vegan": false
 		}
 		
 	]

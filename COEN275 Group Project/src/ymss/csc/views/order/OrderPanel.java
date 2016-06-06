@@ -2,6 +2,7 @@ package ymss.csc.views.order;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -11,14 +12,18 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import ymss.csc.application.Constants;
 import ymss.csc.models.FoodItem;
 import ymss.csc.models.Order;
+import ymss.csc.models.UserAccount;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -26,16 +31,21 @@ import javax.swing.border.EmptyBorder;
 public class OrderPanel extends JPanel implements Observer {
 
 	private Order order;
+	private UserAccount user;
 
 	private JButton btnPurchase;
 	private JPanel pnlItems;
 	private JLabel lblTotal;
 	private JPanel panel;
+	private JLabel lblTotalCalories;
 
-	public OrderPanel(Order order) {
+	public OrderPanel(Order order,UserAccount user) {
 		setBorder(new EmptyBorder(10, 5, 10, 5));
 		this.order = order;
 		order.addObserver(this);
+		this.user = user;
+		user.addObserver(this);
+		
 		setLayout(new BorderLayout(0, 0));
 
 		JLabel lblHeader = new JLabel("Order");
@@ -45,7 +55,12 @@ public class OrderPanel extends JPanel implements Observer {
 
 		pnlItems = new JPanel();
 		pnlItems.setLayout(new GridBagLayout());
-		this.add(pnlItems);
+		JScrollPane scrollPane = new JScrollPane(pnlItems, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		add(scrollPane, BorderLayout.CENTER);		
+		scrollPane.setViewportView(pnlItems);
+		
+		this.add(scrollPane);
 
 		panel = new JPanel();
 		add(panel, BorderLayout.SOUTH);
@@ -55,6 +70,11 @@ public class OrderPanel extends JPanel implements Observer {
 		lblTotal = new JLabel(strTotal);
 		lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblTotal);
+
+		String strTotalCals = String.format("Total Calories: %d", order.getTotalCalories());
+		lblTotalCalories = new JLabel(strTotalCals);
+		lblTotalCalories.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblTotalCalories);
 
 		btnPurchase = new JButton("Purchase");
 		panel.add(btnPurchase);
@@ -98,6 +118,15 @@ public class OrderPanel extends JPanel implements Observer {
 
 		String sTotal = String.format("Total: $%.2f", order.getTotalCost());
 		lblTotal.setText(sTotal);
+		
+		String strTotalCals = String.format("Total Calories: %d", order.getTotalCalories());
+		lblTotalCalories.setText(strTotalCals);
+		
+		if(order.getTotalCalories() > (user.getDiet().getCalorieMaximum() - user.getCaloriesConsumed(new Date()))){
+			lblTotalCalories.setForeground(Color.RED);
+		}else{
+			lblTotalCalories.setForeground(Color.BLACK);
+		}
 	}
 
 	private void redraw() {
