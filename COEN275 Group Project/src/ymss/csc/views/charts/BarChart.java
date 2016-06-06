@@ -19,6 +19,8 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
+import ymss.csc.application.Constants;
+
 public class BarChart extends JPanel {
 
 	private static final long serialVersionUID = -726692311360619933L;
@@ -118,8 +120,8 @@ public class BarChart extends JPanel {
 		g.drawString(text, x, y);
 	}
 
-	private static final Font CHART_TITLE_FONT = new Font("Takoma", Font.BOLD, 16);
-	private static final Font CHART_NORMAL_FONT = new Font("Takoma", Font.PLAIN, 12);
+	private static final Font CHART_TITLE_FONT = Constants.FONT_HEADING_3; 
+	private static final Font CHART_NORMAL_FONT = Constants.FONT_NORMAL;
 	
 	private void drawHorzLine(Graphics2D g2, Integer chartHeight, Integer chartWidth,Double barScaleY, Double value, String caption){
 		

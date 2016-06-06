@@ -22,6 +22,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import ymss.csc.application.Constants;
 import ymss.csc.models.AbstractVendor;
 import ymss.csc.models.Cafe;
 import ymss.csc.models.VendingMachine;
@@ -31,6 +32,10 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 	private static final long serialVersionUID = -428048895200218400L;
 
 	private static final String MAP_IMAGE = "pictures/cafePic2.png";
+	private static final String ICON_CAFE = "pictures/cafeIcon.png";
+	private static final String ICON_VENDINGMACHINE = "pictures/vmIcon.png";
+	private static final Integer ICON_PROPERTY_WIDTH = 30;
+	private static final Integer ICON_PROPERTY_HEIGHT = 40;
 
 	private JPanel pnlIconLabel;
 	private JLabel lblCafeVMIcons;
@@ -145,10 +150,6 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 		lblMapImage.setIcon(scaleImage(MAP_IMAGE, lpnMap.getWidth(), lpnMap.getHeight()));
 	}
 	
-	private static final String ICON_CAFE = "pictures/cafeIcon.png";
-	private static final String ICON_VENDINGMACHINE = "pictures/vmIcon.png";
-	private static final Integer ICON_PROPERTY_WIDTH = 30;
-	private static final Integer ICON_PROPERTY_HEIGHT = 40;
 	
 	private void addMapIcon(JPanel parent, AbstractVendor vendor){
 		JButton btnTest = new JButton();
@@ -200,19 +201,6 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 		pnlIconLabel.add(lblCafeVMIcons);
 		pnlIconLabel.setBackground(Color.WHITE);
 		pnlIconLabel.setVisible(false);
-
-		/*
-		Cafe c = new Cafe();
-		c.setName("Cafe");
-		c.setCoordinates(20.0, 20.0);
-		
-		addMapIcon(parent,c);
-
-		VendingMachine vm = new VendingMachine();
-		vm.setCoordinates(140.0, 140.0);
-		
-		addMapIcon(parent,vm);
-		*/
 		
 		Iterator<AbstractVendor> it = this.vendors.iterator();
 		while(it.hasNext()){
@@ -237,8 +225,7 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 		icon.addMouseListener(new MouseListener() {
 
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-			}
+			public void mouseClicked(MouseEvent arg0) {}
 
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -265,12 +252,10 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 			}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-			}
+			public void mousePressed(MouseEvent arg0) {}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-			}
+			public void mouseReleased(MouseEvent arg0) {}
 
 		});
 	}

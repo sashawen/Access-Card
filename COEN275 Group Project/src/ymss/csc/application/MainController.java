@@ -1,4 +1,4 @@
-package ymss.csc.controllers;
+package ymss.csc.application;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +9,7 @@ import java.util.Observer;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import ymss.csc.models.*;
 import ymss.csc.stores.*;
@@ -87,6 +88,7 @@ public class MainController implements Observer{
 		dummyCafe = new Cafe();
 		initFoodVendor(dummyVendingMachine);
 		initFoodVendor(dummyCafe);
+		initFonts();
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -108,6 +110,40 @@ public class MainController implements Observer{
 
 			}
 		});
+	}
+	
+	private void initFonts(){
+		UIManager.put("Button.font", Constants.FONT_NORMAL);
+		UIManager.put("ToggleButton.font", Constants.FONT_NORMAL);
+		UIManager.put("RadioButton.font", Constants.FONT_NORMAL);
+		UIManager.put("CheckBox.font", Constants.FONT_NORMAL);
+		UIManager.put("ColorChooser.font", Constants.FONT_NORMAL);
+		UIManager.put("ComboBox.font", Constants.FONT_NORMAL);
+		UIManager.put("Label.font", Constants.FONT_NORMAL);
+		UIManager.put("List.font", Constants.FONT_NORMAL);
+		UIManager.put("MenuBar.font", Constants.FONT_NORMAL);
+		UIManager.put("MenuItem.font", Constants.FONT_NORMAL);
+		UIManager.put("RadioButtonMenuItem.font", Constants.FONT_NORMAL);
+		UIManager.put("CheckBoxMenuItem.font", Constants.FONT_NORMAL);
+		UIManager.put("Menu.font", Constants.FONT_NORMAL);
+		UIManager.put("PopupMenu.font", Constants.FONT_NORMAL);
+		UIManager.put("OptionPane.font", Constants.FONT_NORMAL);
+		UIManager.put("Panel.font", Constants.FONT_NORMAL);
+		UIManager.put("ProgressBar.font", Constants.FONT_NORMAL);
+		UIManager.put("ScrollPane.font", Constants.FONT_NORMAL);
+		UIManager.put("Viewport.font", Constants.FONT_NORMAL);
+		UIManager.put("TabbedPane.font", Constants.FONT_NORMAL);
+		UIManager.put("Table.font", Constants.FONT_NORMAL);
+		UIManager.put("TableHeader.font", Constants.FONT_NORMAL);
+		UIManager.put("TextField.font", Constants.FONT_NORMAL);
+		UIManager.put("PasswordField.font", Constants.FONT_NORMAL);
+		UIManager.put("TextArea.font", Constants.FONT_NORMAL);
+		UIManager.put("TextPane.font", Constants.FONT_NORMAL);
+		UIManager.put("EditorPane.font", Constants.FONT_NORMAL);
+		UIManager.put("TitledBorder.font", Constants.FONT_NORMAL);
+		UIManager.put("ToolBar.font", Constants.FONT_NORMAL);
+		UIManager.put("ToolTip.font", Constants.FONT_NORMAL);
+		UIManager.put("Tree.font", Constants.FONT_NORMAL);
 	}
 
 	/**

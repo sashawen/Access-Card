@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import ymss.csc.application.Constants;
 import ymss.csc.models.AccountTransaction;
 import ymss.csc.models.DietaryProfile;
 import ymss.csc.models.Order;
@@ -148,7 +149,7 @@ public class HealthFrame extends JFrame implements Observer {
 		panel_2.add(lblTitle);
 		lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Viner Hand ITC", Font.BOLD, 16));
+		lblTitle.setFont(Constants.FONT_HEADING_3);
 
 		pnlCalories = new JPanel();
 		pnlCalories.setBorder(new EmptyBorder(10, 10, 10, 10));

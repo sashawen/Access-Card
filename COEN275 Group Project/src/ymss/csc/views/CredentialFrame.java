@@ -15,6 +15,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import ymss.csc.application.Constants;
+
 public class CredentialFrame extends JFrame {
 	/**
 	 * 
@@ -63,7 +65,6 @@ public class CredentialFrame extends JFrame {
 		cs.gridy = 1;
 		cs.gridwidth = 2;
 		panel.add(pfPassword, cs);
-		panel.setBorder(new LineBorder(Color.GRAY));
 
 		btnAuthenticate = new JButton("Submit");
 		btnCancel = new JButton("Cancel");

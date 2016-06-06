@@ -1,6 +1,7 @@
 package ymss.csc.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import ymss.csc.application.Constants;
 import ymss.csc.models.AbstractVendor;
 import ymss.csc.models.Cafe;
 import ymss.csc.models.VendingMachine;
@@ -44,23 +46,14 @@ public class VendorListPanel extends AbstractVendorSelectionPanel {
 		initialize();
 	}
 
-	
-
-	private void initialize() {
-
-		// Initialize cafe list panel.
-		this.setBorder(new EmptyBorder(10, 10, 10, 10));
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		createListPanelHeading(this, "Cafes");
-
+	private void initCafeList(JPanel parent) {
 		// "Cafe" List
-		JPanel panel_4 = new JPanel();
-		this.add(panel_4);
-		panel_4.setLayout(new GridLayout(0, 1, 0, 0));
+		JPanel pnlCafeList = new JPanel();
+		parent.add(pnlCafeList);
+		pnlCafeList.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JList list = new JList();
-		list.setModel(new AbstractListModel() {
+		JList lstCafe = new JList();
+		lstCafe.setModel(new AbstractListModel() {
 
 			@Override
 			public Object getElementAt(int index) {
@@ -73,29 +66,30 @@ public class VendorListPanel extends AbstractVendorSelectionPanel {
 			}
 
 		});
-		panel_4.add(list);
-		list.addMouseListener(new MouseAdapter() {
+		pnlCafeList.add(lstCafe);
+		pnlCafeList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JList list = (JList) evt.getSource();
 				if (evt.getClickCount() == 2) {
 
 					// Double-click detected
 					int index = list.locationToIndex(evt.getPoint());
-					//JOptionPane.showMessageDialog(null, "You clicked on "+cafes.get(index));
+					// JOptionPane.showMessageDialog(null, "You clicked on
+					// "+cafes.get(index));
 					vendorSelected(cafes.get(index));
 				}
 			}
 		});
+	}
+	
+	private void initVendingMachineList(JPanel parent) {
+		JPanel pnlVM = new JPanel();
+		parent.add(pnlVM);
+		pnlVM.setLayout(new GridLayout(0, 1, 0, 0));
 
-		createListPanelHeading(this, "Vending Machines");
-
-		JPanel panel_3 = new JPanel();
-		this.add(panel_3);
-		panel_3.setLayout(new GridLayout(0, 1, 0, 0));
-
-		JList list_1 = new JList();
-		panel_3.add(list_1);
-		list_1.setModel(new AbstractListModel() {
+		JList lstVM = new JList();
+		pnlVM.add(lstVM);
+		lstVM.setModel(new AbstractListModel() {
 
 			public int getSize() {
 				return vendingMachines.size();
@@ -105,7 +99,7 @@ public class VendorListPanel extends AbstractVendorSelectionPanel {
 				return vendingMachines.get(index).getName();
 			}
 		});
-		list_1.addMouseListener(new MouseAdapter() {
+		lstVM.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JList list = (JList) evt.getSource();
 				if (evt.getClickCount() == 2) {
@@ -117,15 +111,39 @@ public class VendorListPanel extends AbstractVendorSelectionPanel {
 			}
 		});
 	}
-	
+
+	private void initialize() {
+
+		// Initialize cafe list panel.
+		this.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+		setLayout(new GridLayout(2, 1, 0, 0));
+
+		JPanel panel = new JPanel();
+		add(panel);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		createListPanelHeading(panel, "Cafes");
+		initCafeList(panel);
+
+		JPanel panel_1 = new JPanel();
+		add(panel_1);
+		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+
+		createListPanelHeading(panel_1, "Vending Machines");
+		initVendingMachineList(panel_1);
+
+	}
+
 	private void createListPanelHeading(JPanel parent, String heading) {
+
 		JPanel pnlCafeHeading = new JPanel();
 		parent.add(pnlCafeHeading);
 		pnlCafeHeading.setLayout(new BoxLayout(pnlCafeHeading, BoxLayout.X_AXIS));
-
+		
 		JLabel lblCafeHeading = new JLabel(heading);
 		pnlCafeHeading.add(lblCafeHeading);
-		lblCafeHeading.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblCafeHeading.setFont(Constants.FONT_HEADING_3);
 	}
 
 	private List<String> getCafeNames() {

@@ -39,6 +39,7 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ymss.csc.application.Constants;
 import ymss.csc.models.AbstractVendor;
 import ymss.csc.models.Cafe;
 import ymss.csc.models.UserAccount;
@@ -51,8 +52,6 @@ import java.awt.CardLayout;
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 6983316186716069456L;
-
-	static final String title = "TechTonic University Dining Services";
 
 	private JButton btnCafe;
 	private JButton btnVendingMachine;
@@ -80,7 +79,7 @@ public class MainFrame extends JFrame {
 		this.vendors = vendors;
 
 		// Window initialization
-		setTitle(title);
+		setTitle(Constants.TEXT_APPNAME);
 		setSize(800, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -133,10 +132,11 @@ public class MainFrame extends JFrame {
 		panel.add(tempPanel, BorderLayout.NORTH);
 		tempPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		btnFinance = new JButton("Finance Frame");
+		btnFinance = new JButton("View Finances");
+		btnFinance.setFocusPainted(false);
 		tempPanel.add(btnFinance);
 
-		btnHealth = new JButton("Health Frame");
+		btnHealth = new JButton("View Health Preferences");
 		tempPanel.add(btnHealth);
 
 	}

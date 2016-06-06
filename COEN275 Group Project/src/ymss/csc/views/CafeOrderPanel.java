@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
+import ymss.csc.application.Constants;
 import ymss.csc.models.AbstractVendor;
 import ymss.csc.models.Cafe;
 import ymss.csc.models.FoodItem;
@@ -47,7 +48,7 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 
 		JPanel pnlBalance = new JPanel();
 		lblBalance = new JLabel("Remaining Balance:");
-		lblBalance.setFont(new Font("Lucida Grande", Font.BOLD, 16));
+		lblBalance.setFont(Constants.FONT_HEADING_3);
 		pnlBalance.add(lblBalance);
 		add(pnlBalance, BorderLayout.NORTH);
 

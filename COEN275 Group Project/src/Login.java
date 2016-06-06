@@ -100,8 +100,8 @@ public class Login extends JFrame {
 		JLabel logoPic = new JLabel("New label");
 		logoPic.setBounds(59, 85, 272, 240);
 		contentPane.add(logoPic);
-		Image img = new ImageIcon(this.getClass().getResource("login.jpg")).getImage();		
-		logoPic.setIcon(new ImageIcon(img));
+		//Image img = new ImageIcon(this.getClass().getResource("login.jpg")).getImage();		
+		//logoPic.setIcon(new ImageIcon(img));
 		
 		
 		// password label
