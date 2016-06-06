@@ -5,6 +5,8 @@ import java.awt.Font;
 public class Constants {
 
 	public static final Font FONT_NORMAL = new Font("Century Gothic", Font.PLAIN, 13);
+	public static final Font FONT_NORMAL_ITALIC = new Font("Century Gothic", Font.ITALIC, 13);
+	public static final Font FONT_NORMAL_BOLD = new Font("Century Gothic", Font.BOLD, 13);
 	public static final Font FONT_LARGE = new Font("Century Gothic", Font.PLAIN, 16);
 	public static final Font FONT_HEADING_1 = new Font("Century Gothic", Font.BOLD, 24);
 	public static final Font FONT_HEADING_2 = new Font("Century Gothic", Font.BOLD, 18);
