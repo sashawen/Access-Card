@@ -16,6 +16,8 @@ abstract public class AbstractVendorOrderPanel extends JPanel implements Observe
 	protected AbstractVendor vendor;
 	protected UserAccount user;
 	
+	public AbstractVendorOrderPanel(){}
+	
 	public AbstractVendorOrderPanel(AbstractVendor vendor, UserAccount user){
 		this.vendor = vendor;
 		this.user = user;
