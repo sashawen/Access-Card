@@ -133,7 +133,6 @@ public class MainFrame extends JFrame {
 		tempPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		btnFinance = new JButton("View Finances");
-		btnFinance.setFocusPainted(false);
 		tempPanel.add(btnFinance);
 
 		btnHealth = new JButton("View Health Preferences");

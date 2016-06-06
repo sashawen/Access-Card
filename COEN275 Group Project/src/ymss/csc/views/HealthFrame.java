@@ -69,16 +69,6 @@ public class HealthFrame extends JFrame implements Observer {
 
 	private BarChart chart;
 
-	private Boolean onSameDay(Date a, Date b){
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		cal1.setTime(a);
-		cal2.setTime(b);
-		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-		                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-		return sameDay;
-	}
-	
 	private List<String> getPastWeekCaptions(){
 		
 		List<String> dates = new ArrayList<String>();
@@ -93,23 +83,6 @@ public class HealthFrame extends JFrame implements Observer {
 		return dates;
 	}
 	
-	private Double getCaloriesOnDay(UserAccount user,Date date){
-		// Assumes linear order history.
-		List<AccountTransaction> trans = user.getHistory();
-		Iterator<AccountTransaction> it = trans.iterator();
-		Double totalCals = 0.0;
-		while(it.hasNext()){
-			AccountTransaction t = it.next();
-			if(t instanceof Order){
-				Order order = (Order) t;
-				if(onSameDay(order.getDate(),date)){
-					totalCals = totalCals + order.getTotalCalories();
-				}
-			}
-		}
-		return totalCals;
-	}
-	
 	private List<Double> getPastWeekCalories(UserAccount user){
 		List<Double> cals = new ArrayList<Double>();
 
@@ -118,7 +91,7 @@ public class HealthFrame extends JFrame implements Observer {
 			day.setTime(new Date());
 			day.set(Calendar.DAY_OF_YEAR, day.get(Calendar.DAY_OF_YEAR) + i);
 			Date d = day.getTime();
-			cals.add(getCaloriesOnDay(user, d));
+			cals.add((double)user.getCaloriesConsumed(d));
 		}
 		return cals;
 	}

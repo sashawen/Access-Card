@@ -42,6 +42,14 @@ public class FinanceFrame extends JFrame implements Observer {
 
 	private UserAccount user;
 	private JPanel tempPanel;
+	
+	private BarChart chart;
+	private LineChart chart1;
+	private LineChart chart2;
+
+	private static final Color COLOR_LIGHTGRAY = new Color(224, 224, 224);
+	private static final Color COLOR_INRANGE = new Color(23, 106, 130);
+	private static final Color COLOR_OUTRANGE = new Color(255, 68, 35);
 
 	public FinanceFrame(UserAccount user) {
 		this.user = user;
@@ -97,8 +105,6 @@ public class FinanceFrame extends JFrame implements Observer {
 		});
 		pnlSummary.add(btnDeposit);
 	}
-	
-	private JPanel pnlHistory;
 
 	private void initChartPanel(JPanel parent) {
 		if (parent == null)
@@ -108,32 +114,26 @@ public class FinanceFrame extends JFrame implements Observer {
 		tempPanel.add(tabbedPane);
 
 		JPanel pnlChart = new JPanel();
+		pnlChart.setBackground(COLOR_LIGHTGRAY);
 		tabbedPane.addTab("Daily Expenditures - Bar", null, pnlChart, null);
 		pnlChart.setBorder(new LineBorder(new Color(0, 0, 0)));
 
 		addBarChart(pnlChart);
 		
 		JPanel pnlChart2 = new JPanel();
+		pnlChart2.setBackground(COLOR_LIGHTGRAY);
 		tabbedPane.addTab("Daily Expenditures - Line", null, pnlChart2, null);
 		pnlChart2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		addLineChart(pnlChart2);
 
 		
 		JPanel pnlChart3 = new JPanel();
+		pnlChart3.setBackground(COLOR_LIGHTGRAY);
 		tabbedPane.addTab("Account Balance Over Time", null, pnlChart3, null);
 		pnlChart3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		addLineChart2(pnlChart3);
 	}
 
-	//private JPanel pnlChart;
-	private BarChart chart;
-	//private JPanel pnlChart1;
-	private LineChart chart1;
-	private LineChart chart2;
-
-	private static final Color COLOR_LIGHTGRAY = new Color(224, 224, 224);
-	private static final Color COLOR_INRANGE = new Color(23, 106, 130);
-	private static final Color COLOR_OUTRANGE = new Color(255, 68, 35);
 
 	private List<String> getPastWeekCaptions(){
 		
@@ -148,25 +148,6 @@ public class FinanceFrame extends JFrame implements Observer {
 		}
 		return dates;
 	}
-	private Double getExpenseForDay(UserAccount user,Date date){
-		// Assumes linear order history.
-		List<AccountTransaction> trans = user.getHistory();
-		Iterator<AccountTransaction> it = trans.iterator();
-		Double totalExpense = 0.0;
-		Double oldBalance = 0.0;
-		while(it.hasNext()){
-			AccountTransaction t = it.next();
-			if(t instanceof Order){
-				Order order = (Order) t;
-				if(onSameDay(order.getDate(),date)){
-					totalExpense = totalExpense + oldBalance - order.getBalance();
-				}
-			}
-			oldBalance = t.getBalance();
-		}
-		return totalExpense;
-	}
-	
 	private List<Double> getPastWeekExpenses(UserAccount user){
 		List<Double> exps = new ArrayList<Double>();
 
@@ -175,9 +156,39 @@ public class FinanceFrame extends JFrame implements Observer {
 			day.setTime(new Date());
 			day.set(Calendar.DAY_OF_YEAR, day.get(Calendar.DAY_OF_YEAR) + i);
 			Date d = day.getTime();
-			exps.add(getExpenseForDay(user, d));
+			exps.add(user.getTotalExpenses(d));
 		}
 		return exps;
+	}
+	
+
+	private List<Double> getPastWeekBalances(UserAccount user){
+		List<Double> bals = new ArrayList<Double>();
+
+		Integer daysAgo = 6;
+		Date refDate = getDateXDaysAgo(new Date(),daysAgo);
+		Double balance = 0.0;
+		
+		Iterator<AccountTransaction> trans = user.getHistory().iterator();
+		if(!trans.hasNext()) return bals;
+		AccountTransaction t = trans.next();
+		while(true){
+			Date d = t.getDate();
+			if(d.before(refDate) || onSameDay(d,refDate)){
+				balance  = t.getBalance();
+				if(trans.hasNext()){
+					t = trans.next();
+				}else{
+					break;
+				}
+			}else if(d.after(refDate)){
+				bals.add(balance);
+				daysAgo = daysAgo - 1;
+				refDate = getDateXDaysAgo(new Date(),daysAgo);
+			}
+		}
+		bals.add(balance);
+		return bals;
 	}
 	
 	private void addBarChart(JPanel parent){
@@ -217,15 +228,15 @@ public class FinanceFrame extends JFrame implements Observer {
 	private void addLineChart(JPanel parent){
 		parent.setLayout(new BorderLayout());
 
-		chart1 = new LineChart();
-		parent.add(chart1,BorderLayout.CENTER);
+		LineChart chart = new LineChart();
+		parent.add(chart,BorderLayout.CENTER);
 
-		chart1.clear();
+		chart.clear();
 		
 		List<String> captions = getPastWeekCaptions();
 		List<Double> values = this.getPastWeekExpenses(user);
 		for(int i = 0; i < captions.size(); i++){
-			chart1.addDatum(captions.get(i), values.get(i));
+			chart.addDatum(captions.get(i), values.get(i));
 		}
 		
 		Double max = 0.0;
@@ -235,17 +246,19 @@ public class FinanceFrame extends JFrame implements Observer {
 		Double step = 5.0; String cap;
 		while(step < max){
 			cap = String.format("$%.2f", step);
-			chart1.addZoneLine(cap, step);
+			chart.addZoneLine(cap, step);
 			step = step + 5.0;
 		}
 		cap = String.format("$%.2f", step);
-		chart1.addZoneLine(cap, step);
+		chart.addZoneLine(cap, step);
 		
-		chart1.setCeiling(max+5.00);
-		chart1.setColorInRange(COLOR_INRANGE);
-		chart1.setColorOutOfRange(COLOR_OUTRANGE);
-		chart1.setChartTitle("Daily Expenditure");
-		chart1.setGoalEnabled(false);
+		chart.setCeiling(max+5.00);
+		chart.setColorInRange(COLOR_INRANGE);
+		chart.setColorOutOfRange(COLOR_OUTRANGE);
+		chart.setChartTitle("Daily Expenditure");
+		chart.setGoalEnabled(false);
+		
+		chart1 = chart;
 
 	}
 	
@@ -255,36 +268,7 @@ public class FinanceFrame extends JFrame implements Observer {
 		day.set(Calendar.DAY_OF_YEAR, day.get(Calendar.DAY_OF_YEAR) - daysAgo);
 		return day.getTime();
 	}
-	
-	private List<Double> getPastWeekBalances(UserAccount user){
-		List<Double> bals = new ArrayList<Double>();
-
-		Integer daysAgo = 6;
-		Date refDate = getDateXDaysAgo(new Date(),daysAgo);
-		Double balance = 0.0;
 		
-		Iterator<AccountTransaction> trans = user.getHistory().iterator();
-		if(!trans.hasNext()) return bals;
-		AccountTransaction t = trans.next();
-		while(true){
-			Date d = t.getDate();
-			if(d.before(refDate) || onSameDay(d,refDate)){
-				balance  = t.getBalance();
-				if(trans.hasNext()){
-					t = trans.next();
-				}else{
-					break;
-				}
-			}else if(d.after(refDate)){
-				bals.add(balance);
-				daysAgo = daysAgo - 1;
-				refDate = getDateXDaysAgo(new Date(),daysAgo);
-			}
-		}
-		bals.add(balance);
-		return bals;
-	}
-	
 	private void addLineChart2(JPanel parent){
 		parent.setLayout(new BorderLayout());
 
@@ -333,7 +317,6 @@ public class FinanceFrame extends JFrame implements Observer {
 	
 	public void redraw(UserAccount user) {
 		setBalance(user.getRemainingBalance());
-		//drawHistory();
 	}
 
 	public void setBalance(Double balance) {
