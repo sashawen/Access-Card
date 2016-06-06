@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -101,7 +102,7 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 		tempPanel.add(scrollPane, BorderLayout.CENTER);
 		tempPanel.setBackground(Color.pink);
 
-		pnlOrder = new OrderPanel(this.order,user);
+		pnlOrder = new OrderPanel(this.order, user);
 		tempPanel.addComponentListener(new ComponentListener() {
 
 			@Override
@@ -148,6 +149,11 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 	public void purchaseOrder() {
 		if (user.getRemainingBalance() >= order.getTotalCost()) {
 			order.setMemo(vendor.getName());
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date());
+			c.set(Calendar.MINUTE, c.get(Calendar.MINUTE) + 15);
+			finalMessage = String.format("You can pick up the order at %s at %d:%2d.", vendor.getName(),
+					c.get(Calendar.HOUR), c.get(Calendar.MINUTE));
 			confirmPurchase(order);
 		} else {
 			JOptionPane.showMessageDialog(this, "You do not have enough funds.");

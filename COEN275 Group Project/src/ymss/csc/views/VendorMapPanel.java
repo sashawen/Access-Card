@@ -71,7 +71,7 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 
 		lblMapImage = new JLabel("New label");
 		pnlMapImage.add(lblMapImage);
-
+		
 		lpnMap.addComponentListener(new ComponentListener() {
 
 			@Override

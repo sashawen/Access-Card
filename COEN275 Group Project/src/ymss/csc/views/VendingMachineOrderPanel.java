@@ -62,7 +62,7 @@ public class VendingMachineOrderPanel extends AbstractVendorOrderPanel {
 		menuPanel = new ItemMenuPanel(vendor.getMenu());
 		menuPanel.addSelectionListener(new SelectionListener(){
 			public void itemSelected(FoodItem item){
-				itemSelected(item);
+				itemWasSelected(item);
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(menuPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -90,11 +90,13 @@ public class VendingMachineOrderPanel extends AbstractVendorOrderPanel {
 		revalidate();
 	}
 
-	public void itemSelected(FoodItem item) {
+	public void itemWasSelected(FoodItem item) {
 		if (user.getRemainingBalance() >= item.getPrice()) {
 			Order o = new Order();
 			o.addItemToOrder(item);
 			o.setMemo("Vending Machine");
+
+			finalMessage = String.format("Dispensing item: %s",item.getName());
 			confirmPurchase(o);
 		} else {
 			JOptionPane.showMessageDialog(this, "You do not have enough funds.");

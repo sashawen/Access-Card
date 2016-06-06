@@ -26,7 +26,10 @@ public abstract class AbstractJSONStore {
 	protected Double parseDouble(JSONObject o, String key, Double _default) {
 		if (!o.containsKey(key))
 			return _default;
-		return (double) o.get(key);
+		Object val = o.get(key);
+		if(val instanceof Double) return (double)val;
+		if(val instanceof Long) return ((Long) val).doubleValue();
+		return (double) val;
 	}
 
 	protected Boolean parseBoolean(JSONObject o, String key, Boolean _default) {

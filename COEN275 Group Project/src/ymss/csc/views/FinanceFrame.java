@@ -201,7 +201,9 @@ public class FinanceFrame extends JFrame implements Observer {
 				refDate = getDateXDaysAgo(new Date(),daysAgo);
 			}
 		}
-		bals.add(balance);
+		for(int i = daysAgo; i >= 0; i--){
+			bals.add(balance);
+		}
 		return bals;
 	}
 	

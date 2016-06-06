@@ -46,6 +46,8 @@ abstract public class AbstractVendorOrderPanel extends JPanel implements Observe
 		o.purhcase();
 	}
 	
+	protected String finalMessage = "Purchased!";
+	
 	public void confirmPurchase(Order order) {
 
 		String msg = String.format("\nTotal: $%.2f.  OK?", order.getTotalCost());
@@ -57,7 +59,7 @@ abstract public class AbstractVendorOrderPanel extends JPanel implements Observe
 			credFrame.addAuthListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (authenticate(credFrame.getCardNumber(), credFrame.getPassword())) {
-						JOptionPane.showMessageDialog(credFrame, "Purchased!");
+						JOptionPane.showMessageDialog(credFrame, finalMessage);
 						submitOrder(order);
 						credFrame.dispose();
 					} else {

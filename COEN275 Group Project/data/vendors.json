@@ -77,10 +77,44 @@
 {
 	"id":4,
 	"type":"VENDING_MACHINE",
-	"name":"Engineering",
+	"name":"Vending Machine 1",
 	"description":"Tacky mexican joint with ok food",
-	"latitude":74.916,
-	"longitude":63.862,
+	"latitude":30.560,
+	"longitude":18.391,
+	"menu":[
+		5,
+		13,
+		14,
+		15,
+		16,
+		17,
+		18
+		]
+},
+{
+	"id":5,
+	"type":"VENDING_MACHINE",
+	"name":"Vending Machine 2",
+	"description":"Tacky mexican joint with ok food",
+	"latitude":60.320,
+	"longitude":41.571,
+	"menu":[
+		5,
+		13,
+		14,
+		15,
+		16,
+		17,
+		18
+		]
+},
+{
+	"id":6,
+	"type":"VENDING_MACHINE",
+	"name":"Vending Machine 3",
+	"description":"Tacky mexican joint with ok food",
+	"latitude":59.520,
+	"longitude":22.414,
 	"menu":[
 		5,
 		13,

@@ -7,11 +7,13 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import ymss.csc.models.Deposit;
 import ymss.csc.models.UserAccount;
 
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.awt.Component;
 import java.awt.GridLayout;
 
@@ -84,6 +86,9 @@ private static final long serialVersionUID = 7093746272356081378L;
 			public void actionPerformed(ActionEvent e){
 				Double newBalance = user.getRemainingBalance() + getDeposit();
 				user.setRemainingBalance(newBalance);
+				
+				Deposit d = new Deposit(getDeposit(), newBalance, new Date());
+				user.addTransaction(d);
 				dispose();
 			}
 		});
