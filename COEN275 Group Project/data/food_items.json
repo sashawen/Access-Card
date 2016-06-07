@@ -68,8 +68,8 @@
 			"price":1.75,
 			"low_sodium":false,
 			"low_cholesterol":false,
-			"gluten_free": false,
-			"vegan": false
+			"gluten_free": true,
+			"vegan": true
 		},{
 			"id":7,
 			"name":"Hot Dog",
@@ -77,7 +77,7 @@
 			"calories":200,
 			"price":2.75,
 			"low_sodium":false,
-			"low_cholesterol":false,
+			"low_cholesterol":true,
 			"gluten_free": false,
 			"vegan": false
 		},{

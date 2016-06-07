@@ -59,7 +59,7 @@ public class VendingMachineOrderPanel extends AbstractVendorOrderPanel {
 		lblCaloriesLeft.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlBalance.add(lblCaloriesLeft);
 
-		menuPanel = new ItemMenuPanel(vendor.getMenu());
+		menuPanel = new ItemMenuPanel(vendor.getFilteredMenu(user));
 		menuPanel.addSelectionListener(new SelectionListener(){
 			public void itemSelected(FoodItem item){
 				itemWasSelected(item);

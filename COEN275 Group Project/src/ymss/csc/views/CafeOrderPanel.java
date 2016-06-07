@@ -88,7 +88,7 @@ public class CafeOrderPanel extends AbstractVendorOrderPanel {
 		JPanel tempPanel = new JPanel();
 		add(tempPanel);
 
-		ItemMenuPanel menuPanel = new ItemMenuPanel(vendor.getMenu());
+		ItemMenuPanel menuPanel = new ItemMenuPanel(vendor.getFilteredMenu(user));
 		menuPanel.addSelectionListener(new SelectionListener() {
 			public void itemSelected(FoodItem item) {
 				order.addItemToOrder(item);

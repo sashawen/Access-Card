@@ -1,6 +1,7 @@
 package ymss.csc.models;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 abstract public class AbstractVendor {
@@ -12,6 +13,22 @@ abstract public class AbstractVendor {
 	protected Double longitude;
 	protected List<FoodItem> menu = new ArrayList<FoodItem>();
 	
+	
+	public List<FoodItem> getFilteredMenu(UserAccount user){
+		List<FoodItem> fmenu = new ArrayList<FoodItem>();
+		Iterator<FoodItem> it = menu.iterator();
+		DietaryProfile diet = user.getDiet();
+		
+		while(it.hasNext()){
+			FoodItem item = it.next();
+			if(diet.isGlutenFree() && !item.isGlutenFree()) continue;
+			if(diet.isLowSodium() && !item.isLowSodium()) continue;
+			if(diet.isLowCholesterol() && !item.isLowCholesterol()) continue;
+			if(diet.isVegan() && !item.isVegan()) continue;
+			fmenu.add(item);
+		}
+		return fmenu;
+	}
 	
 	public void addItemToMenu(FoodItem item){
 		menu.add(item);
