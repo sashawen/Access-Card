@@ -67,15 +67,13 @@ public class VendorListPanel extends AbstractVendorSelectionPanel {
 
 		});
 		pnlCafeList.add(lstCafe);
-		pnlCafeList.addMouseListener(new MouseAdapter() {
+		lstCafe.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JList list = (JList) evt.getSource();
 				if (evt.getClickCount() == 2) {
 
 					// Double-click detected
 					int index = list.locationToIndex(evt.getPoint());
-					// JOptionPane.showMessageDialog(null, "You clicked on
-					// "+cafes.get(index));
 					vendorSelected(cafes.get(index));
 				}
 			}

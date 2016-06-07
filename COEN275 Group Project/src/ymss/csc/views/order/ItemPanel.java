@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,15 +14,40 @@ import ymss.csc.application.Constants;
 import ymss.csc.models.FoodItem;
 import javax.swing.SwingConstants;
 import java.awt.GridLayout;
+import java.awt.Image;
+
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.border.LineBorder;
+import java.awt.Component;
 
 public class ItemPanel extends JPanel {
 	private static final long serialVersionUID = 6978620418637694671L;
+
+	private static final Integer DIET_ICON_DIM = 20;
+	private static final String ICON_PATH_LOWSODIUM = "pictures/lowSodium.png";
+	private static final String ICON_PATH_LOWCHOLESTEROL = "pictures/lowCholesterol.png";
+	private static final String ICON_PATH_GLUTENFREE = "pictures/glutenFree.png";
+	private static final String ICON_PATH_VEGAN = "pictures/vegan.png";
+
+	private static ImageIcon scaleImage(String filename, Integer width, Integer height) {
+		ImageIcon icon = new ImageIcon(filename);
+
+		if (width > 0 && height > 0) {
+			return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+		} else {
+			return new ImageIcon(filename);
+		}
+	}
+
+	private static final ImageIcon ICON_LOWSODIUM = scaleImage(ICON_PATH_LOWSODIUM, DIET_ICON_DIM, DIET_ICON_DIM);
+	private static final ImageIcon ICON_LOWCHOLESTEROL = scaleImage(ICON_PATH_LOWCHOLESTEROL, DIET_ICON_DIM,
+			DIET_ICON_DIM);
+	private static final ImageIcon ICON_GLUTENFREE = scaleImage(ICON_PATH_GLUTENFREE, DIET_ICON_DIM, DIET_ICON_DIM);
+	private static final ImageIcon ICON_VEGAN = scaleImage(ICON_PATH_VEGAN, DIET_ICON_DIM, DIET_ICON_DIM);
 
 	private FoodItem item;
 
@@ -34,10 +60,10 @@ public class ItemPanel extends JPanel {
 		item.setDescription("Succulent as hell.");
 		item.setCalories(900);
 		item.setPrice(8.50);
-		item.setGlutenFree(false);
-		item.setLowCholesterol(false);
-		item.setLowSodium(false);
-		item.setVegan(false);
+		item.setGlutenFree(true);
+		item.setLowCholesterol(true);
+		item.setLowSodium(true);
+		item.setVegan(true);
 
 		init(item);
 	}
@@ -70,11 +96,46 @@ public class ItemPanel extends JPanel {
 		JLabel lblDescription = new JLabel(item.getDescription());
 		lblDescription.setFont(Constants.FONT_NORMAL_ITALIC);
 		pnlItemInfo.add(lblDescription);
+
+		JPanel pnlHealth = new JPanel();
+		pnlHealth.setAlignmentX(Component.LEFT_ALIGNMENT);
+		pnlHealth.setOpaque(false);
+		pnlItemInfo.add(pnlHealth);
+		pnlHealth.setLayout(new BoxLayout(pnlHealth, BoxLayout.X_AXIS));
+
 		JLabel lblCalories = new JLabel(item.getCalories() + " calories");
+		lblCalories.setBorder(new EmptyBorder(0, 0, 0, 20));
+		pnlHealth.add(lblCalories);
 		lblCalories.setFont(Constants.FONT_NORMAL_ITALIC);
 		lblCalories.setForeground(new Color(80, 80, 80));
-		pnlItemInfo.add(lblCalories);
 
+		if (item.isLowSodium()) {
+			JLabel lblLowSodium = new JLabel("");
+			lblLowSodium.setIcon(ICON_LOWSODIUM);
+			lblLowSodium.setBorder(new EmptyBorder(0, 0, 0, 5));
+			pnlHealth.add(lblLowSodium);
+		}
+
+		if (item.isLowCholesterol()) {
+			JLabel lblLowCholesterol = new JLabel("");
+			lblLowCholesterol.setIcon(ICON_LOWCHOLESTEROL);
+			lblLowCholesterol.setBorder(new EmptyBorder(0, 0, 0, 5));
+			pnlHealth.add(lblLowCholesterol);
+		}
+
+		if (item.isGlutenFree()) {
+			JLabel lblGlutenFree = new JLabel("");
+			lblGlutenFree.setIcon(ICON_GLUTENFREE);
+			lblGlutenFree.setBorder(new EmptyBorder(0, 0, 0, 5));
+			pnlHealth.add(lblGlutenFree);
+		}
+
+		if (item.isVegan()) {
+			JLabel lblVegan = new JLabel("");
+			lblVegan.setIcon(ICON_VEGAN);
+			lblVegan.setBorder(new EmptyBorder(0, 0, 0, 5));
+			pnlHealth.add(lblVegan);
+		}
 		JPanel panel = new JPanel();
 		panel.setBorder(new EmptyBorder(5, 0, 5, 5));
 		panel.setOpaque(false);
