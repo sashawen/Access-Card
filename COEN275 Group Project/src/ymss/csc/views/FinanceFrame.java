@@ -43,7 +43,7 @@ public class FinanceFrame extends JFrame implements Observer {
 
 	private UserAccount user;
 	private JPanel tempPanel;
-	
+
 	private BarChart chart;
 	private LineChart chart1;
 	private LineChart chart2;
@@ -97,15 +97,16 @@ public class FinanceFrame extends JFrame implements Observer {
 
 		btnDeposit = new JButton("Deposit Funds");
 		btnDeposit.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnDeposit.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				if(fundDepositFrame == null) fundDepositFrame = new FundDepositFrame(user);
-				
+		btnDeposit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (fundDepositFrame == null)
+					fundDepositFrame = new FundDepositFrame(user);
+
 				fundDepositFrame.setVisible(true);
 			}
 		});
 		pnlSummary.add(btnDeposit);
-		
+
 		JPanel pnlDailySpent = new JPanel();
 		pnlDailySpent.setBorder(new EmptyBorder(10, 10, 10, 10));
 		pnlSummary.add(pnlDailySpent);
@@ -117,13 +118,12 @@ public class FinanceFrame extends JFrame implements Observer {
 		lblDailySpent = new JLabel("$0.00");
 		pnlDailySpent.add(lblDailySpent);
 
-		
 	}
 
 	private void initChartPanel(JPanel parent) {
 		if (parent == null)
 			return;
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tempPanel.add(tabbedPane);
 
@@ -133,14 +133,13 @@ public class FinanceFrame extends JFrame implements Observer {
 		pnlChart.setBorder(new LineBorder(new Color(0, 0, 0)));
 
 		addBarChart(pnlChart);
-		
+
 		JPanel pnlChart2 = new JPanel();
 		pnlChart2.setBackground(COLOR_LIGHTGRAY);
 		tabbedPane.addTab("Daily Expenditures - Line", null, pnlChart2, null);
 		pnlChart2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		addLineChart(pnlChart2);
 
-		
 		JPanel pnlChart3 = new JPanel();
 		pnlChart3.setBackground(COLOR_LIGHTGRAY);
 		tabbedPane.addTab("Account Balance Over Time", null, pnlChart3, null);
@@ -148,21 +147,21 @@ public class FinanceFrame extends JFrame implements Observer {
 		addLineChart2(pnlChart3);
 	}
 
+	private List<String> getPastWeekCaptions() {
 
-	private List<String> getPastWeekCaptions(){
-		
 		List<String> dates = new ArrayList<String>();
-		
-		for(int i = -6; i <= 0; i++){
+
+		for (int i = -6; i <= 0; i++) {
 			Calendar day = Calendar.getInstance();
 			day.setTime(new Date());
-			day.set(Calendar.DAY_OF_YEAR,day.get(Calendar.DAY_OF_YEAR) + i);
-			String datestring = String.format("%d/%d", day.get(Calendar.MONTH)+1,day.get(Calendar.DAY_OF_MONTH));
+			day.set(Calendar.DAY_OF_YEAR, day.get(Calendar.DAY_OF_YEAR) + i);
+			String datestring = String.format("%d/%d", day.get(Calendar.MONTH) + 1, day.get(Calendar.DAY_OF_MONTH));
 			dates.add(datestring);
 		}
 		return dates;
 	}
-	private List<Double> getPastWeekExpenses(UserAccount user){
+
+	private List<Double> getPastWeekExpenses(UserAccount user) {
 		List<Double> exps = new ArrayList<Double>();
 
 		for (int i = -6; i <= 0; i++) {
@@ -174,163 +173,177 @@ public class FinanceFrame extends JFrame implements Observer {
 		}
 		return exps;
 	}
-	
 
-	private List<Double> getPastWeekBalances(UserAccount user){
+	private List<Double> getPastWeekBalances(UserAccount user) {
 		List<Double> bals = new ArrayList<Double>();
 
 		Integer daysAgo = 6;
-		Date refDate = getDateXDaysAgo(new Date(),daysAgo);
+		Date refDate = getDateXDaysAgo(new Date(), daysAgo);
 		Double balance = 0.0;
-		
+
 		Iterator<AccountTransaction> trans = user.getHistory().iterator();
-		if(!trans.hasNext()) return bals;
+		if (!trans.hasNext())
+			return bals;
 		AccountTransaction t = trans.next();
-		while(true){
+		while (true) {
 			Date d = t.getDate();
-			if(d.before(refDate) || onSameDay(d,refDate)){
-				balance  = t.getBalance();
-				if(trans.hasNext()){
+			if (d.before(refDate) || onSameDay(d, refDate)) {
+				balance = t.getBalance();
+				if (trans.hasNext()) {
 					t = trans.next();
-				}else{
+				} else {
 					break;
 				}
-			}else if(d.after(refDate)){
+			} else if (d.after(refDate)) {
 				bals.add(balance);
 				daysAgo = daysAgo - 1;
-				refDate = getDateXDaysAgo(new Date(),daysAgo);
+				refDate = getDateXDaysAgo(new Date(), daysAgo);
 			}
 		}
-		for(int i = daysAgo; i >= 0; i--){
+		for (int i = daysAgo; i >= 0; i--) {
 			bals.add(balance);
 		}
 		return bals;
 	}
-	
-	private void addBarChart(JPanel parent){
+
+	private void addBarChart(JPanel parent) {
 		parent.setLayout(new BorderLayout());
 
 		chart = new BarChart();
-		parent.add(chart,BorderLayout.CENTER);
-
-		chart.clear();
+		parent.add(chart, BorderLayout.CENTER);
+		redrawChart(chart);
 		
+	}
+	
+	private void redrawChart(BarChart chart){
+		chart.clear();
+
 		List<String> captions = getPastWeekCaptions();
 		List<Double> values = this.getPastWeekExpenses(user);
-		for(int i = 0; i < captions.size(); i++){
+		for (int i = 0; i < captions.size(); i++) {
 			chart.addDatum(captions.get(i), values.get(i));
 		}
-		
+
 		Double max = 0.0;
-		for(int i = 0; i < values.size(); i++){
+		for (int i = 0; i < values.size(); i++) {
 			max = Math.max(max, values.get(i));
 		}
-		Double step = 5.0; String cap;
-		while(step < max){
+		Double step = 5.0;
+		String cap;
+		while (step < max) {
 			cap = String.format("$%.2f", step);
 			chart.addZoneLine(cap, step);
 			step = step + 5.0;
 		}
 		cap = String.format("$%.2f", step);
 		chart.addZoneLine(cap, step);
-		
-		chart.setCeiling(max+5.00);
+
+		chart.setCeiling(max + 5.00);
 		chart.setColorInRange(COLOR_INRANGE);
 		chart.setColorOutOfRange(COLOR_OUTRANGE);
 		chart.setChartTitle("Daily Expenditure");
 		chart.setGoalEnabled(false);
 	}
-	
-	private void addLineChart(JPanel parent){
+
+	private void redrawChart1(LineChart chart){
+		chart.clear();
+
+		List<String> captions = getPastWeekCaptions();
+		List<Double> values = this.getPastWeekExpenses(user);
+		for (int i = 0; i < captions.size(); i++) {
+			chart.addDatum(captions.get(i), values.get(i));
+		}
+
+		Double max = 0.0;
+		for (int i = 0; i < values.size(); i++) {
+			max = Math.max(max, values.get(i));
+		}
+		Double step = 5.0;
+		String cap;
+		while (step < max) {
+			cap = String.format("$%.2f", step);
+			chart.addZoneLine(cap, step);
+			step = step + 5.0;
+		}
+		cap = String.format("$%.2f", step);
+		chart.addZoneLine(cap, step);
+
+		chart.setCeiling(max + 5.00);
+		chart.setColorInRange(COLOR_INRANGE);
+		chart.setColorOutOfRange(COLOR_OUTRANGE);
+		chart.setChartTitle("Daily Expenditure");
+		chart.setGoalEnabled(false);
+	}
+	private void addLineChart(JPanel parent) {
 		parent.setLayout(new BorderLayout());
 
 		LineChart chart = new LineChart();
-		parent.add(chart,BorderLayout.CENTER);
+		parent.add(chart, BorderLayout.CENTER);
 
-		chart.clear();
-		
-		List<String> captions = getPastWeekCaptions();
-		List<Double> values = this.getPastWeekExpenses(user);
-		for(int i = 0; i < captions.size(); i++){
-			chart.addDatum(captions.get(i), values.get(i));
-		}
-		
-		Double max = 0.0;
-		for(int i = 0; i < values.size(); i++){
-			max = Math.max(max, values.get(i));
-		}
-		Double step = 5.0; String cap;
-		while(step < max){
-			cap = String.format("$%.2f", step);
-			chart.addZoneLine(cap, step);
-			step = step + 5.0;
-		}
-		cap = String.format("$%.2f", step);
-		chart.addZoneLine(cap, step);
-		
-		chart.setCeiling(max+5.00);
-		chart.setColorInRange(COLOR_INRANGE);
-		chart.setColorOutOfRange(COLOR_OUTRANGE);
-		chart.setChartTitle("Daily Expenditure");
-		chart.setGoalEnabled(false);
-		
+		redrawChart1(chart);
+
 		chart1 = chart;
 
 	}
-	
-	private Date getDateXDaysAgo(Date d,Integer daysAgo){
+
+	private Date getDateXDaysAgo(Date d, Integer daysAgo) {
 		Calendar day = Calendar.getInstance();
 		day.setTime(d);
 		day.set(Calendar.DAY_OF_YEAR, day.get(Calendar.DAY_OF_YEAR) - daysAgo);
 		return day.getTime();
 	}
-		
-	private void addLineChart2(JPanel parent){
-		parent.setLayout(new BorderLayout());
 
-		LineChart chart = new LineChart();
-		parent.add(chart,BorderLayout.CENTER);
-
+	private void redrawChart2(LineChart chart) {
 		chart.clear();
-		
+
 		List<String> captions = getPastWeekCaptions();
 		List<Double> values = this.getPastWeekBalances(user);
-		for(int i = 0; i < captions.size(); i++){
+		for (int i = 0; i < captions.size(); i++) {
 			chart.addDatum(captions.get(i), values.get(i));
 		}
-		
+
 		Double max = 0.0;
-		for(int i = 0; i < values.size(); i++){
+		for (int i = 0; i < values.size(); i++) {
 			max = Math.max(max, values.get(i));
 		}
-		Double step = 5.0; String cap;
-		while(step < max){
+		Double step = 5.0;
+		String cap;
+		while (step < max) {
 			cap = String.format("$%.2f", step);
 			chart.addZoneLine(cap, step);
 			step = step + 5.0;
 		}
 		cap = String.format("$%.2f", step);
 		chart.addZoneLine(cap, step);
-		
-		chart.setCeiling(max+5.00);
+
+		chart.setCeiling(max + 5.00);
 		chart.setColorInRange(COLOR_INRANGE);
 		chart.setColorOutOfRange(COLOR_OUTRANGE);
 		chart.setChartTitle("Account Balance Over Time");
 		chart.setGoalEnabled(false);
+	}
+
+	private void addLineChart2(JPanel parent) {
+		parent.setLayout(new BorderLayout());
+
+		LineChart chart = new LineChart();
+		parent.add(chart, BorderLayout.CENTER);
+
+		redrawChart2(chart);
 		
 		chart2 = chart;
 	}
-	
-	private Boolean onSameDay(Date a, Date b){
+
+	private Boolean onSameDay(Date a, Date b) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
 		cal1.setTime(a);
 		cal2.setTime(b);
-		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-		                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 		return sameDay;
 	}
-	
+
 	public void redraw(UserAccount user) {
 		Double balance = user.getRemainingBalance();
 
@@ -341,6 +354,11 @@ public class FinanceFrame extends JFrame implements Observer {
 
 		String strSpent = String.format("$%.2f", spent);
 		lblDailySpent.setText(strSpent);
+
+		redrawChart(chart);
+		redrawChart1(chart1);
+		redrawChart2(chart2);
+		
 		
 		repaint();
 		revalidate();
