@@ -11,6 +11,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,9 +32,9 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 
 	private static final long serialVersionUID = -428048895200218400L;
 
-	private static final String MAP_IMAGE = "pictures/cafePic2.png";
-	private static final String ICON_CAFE = "pictures/cafeIcon.png";
-	private static final String ICON_VENDINGMACHINE = "pictures/vmIcon.png";
+	private static final String MAP_IMAGE = "/res/cafePic2.png";
+	private static final String ICON_CAFE = "/res/cafeIcon.png";
+	private static final String ICON_VENDINGMACHINE = "/res/vmIcon.png";
 	private static final Integer ICON_PROPERTY_WIDTH = 30;
 	private static final Integer ICON_PROPERTY_HEIGHT = 40;
 
@@ -212,8 +213,10 @@ public class VendorMapPanel extends AbstractVendorSelectionPanel {
 	}
 
 	public ImageIcon scaleImage(String filename, Integer width, Integer height) {
-		ImageIcon icon = new ImageIcon(filename);
-
+		
+		URL rsrc = this.getClass().getResource(filename);
+		ImageIcon icon = new ImageIcon(rsrc);
+		
 		if (width > 0 && height > 0) {
 			return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
 		} else {

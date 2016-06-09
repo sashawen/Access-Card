@@ -198,6 +198,8 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 		} catch (FileNotFoundException e) {
 			InputStream in = getClass().getResourceAsStream(filename);
 			BufferedReader input = new BufferedReader(new InputStreamReader(in));
+			File dir = new File("data");
+			dir.mkdir();
 			try {
 				JSONObject jsonObject = (JSONObject) parser.parse(input);
 				if (treeParser != null)

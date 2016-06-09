@@ -2,6 +2,7 @@ package ymss.csc.views.order;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,13 +29,15 @@ public class ItemPanel extends JPanel {
 	private static final long serialVersionUID = 6978620418637694671L;
 
 	private static final Integer DIET_ICON_DIM = 20;
-	private static final String ICON_PATH_LOWSODIUM = "pictures/lowSodium.png";
-	private static final String ICON_PATH_LOWCHOLESTEROL = "pictures/lowCholesterol.png";
-	private static final String ICON_PATH_GLUTENFREE = "pictures/glutenFree.png";
-	private static final String ICON_PATH_VEGAN = "pictures/vegan.png";
+	private static final String ICON_PATH_LOWSODIUM = "/res/lowSodium.png";
+	private static final String ICON_PATH_LOWCHOLESTEROL = "/res/lowCholesterol.png";
+	private static final String ICON_PATH_GLUTENFREE = "/res/glutenFree.png";
+	private static final String ICON_PATH_VEGAN = "/res/vegan.png";
 
 	private static ImageIcon scaleImage(String filename, Integer width, Integer height) {
-		ImageIcon icon = new ImageIcon(filename);
+
+		URL rsrc = ItemPanel.class.getResource(filename);
+		ImageIcon icon = new ImageIcon(rsrc);
 
 		if (width > 0 && height > 0) {
 			return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
