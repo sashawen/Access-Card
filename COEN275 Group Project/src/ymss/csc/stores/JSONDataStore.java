@@ -1,12 +1,20 @@
 package ymss.csc.stores;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -177,14 +185,31 @@ public class JSONDataStore extends AbstractJSONStore implements PersistentDataSt
 		public void parseJSONTree(JSONObject o);
 	}
 
-	private void parseJSONFile(String filename, MyJSONParser treeParser) {
+	private void parseJSONFile(String filename, MyJSONParser treeParser){
+		parseJSONFile(filename,treeParser,false);
+	}
+	
+	private void parseJSONFile(String filename, MyJSONParser treeParser,boolean retry) {
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(filename));
 			if (treeParser != null)
 				treeParser.parseJSONTree(jsonObject);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			InputStream in = getClass().getResourceAsStream(filename);
+			BufferedReader input = new BufferedReader(new InputStreamReader(in));
+			try {
+				JSONObject jsonObject = (JSONObject) parser.parse(input);
+				if (treeParser != null)
+					treeParser.parseJSONTree(jsonObject);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
